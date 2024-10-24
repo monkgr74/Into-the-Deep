@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class DriveTrain {
 
@@ -13,6 +18,11 @@ public class DriveTrain {
     public DcMotor backLeft;
     public DcMotor frontRight;
     public DcMotor backRight;
+    IMU imu;
+    IMU.Parameters parameters;
+    YawPitchRollAngles ypr;
+
+    private Orientation angles;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -55,6 +65,8 @@ public class DriveTrain {
         backLeft.setPower(0);
         backRight.setPower(0);
 
+
+
     }
 
     public void stopMotors(){
@@ -66,7 +78,6 @@ public class DriveTrain {
         backLeft.setPower(0);
         backRight.setPower(0);
     }
-
 
     public void moveForward(double power, long targetInMilis) {
         runtime.reset();
@@ -131,6 +142,29 @@ public class DriveTrain {
         }
         stopMotors();
     }
+
+    public void rotate(double power, long targetInMilis) {
+        opMode.telemetry.addData("Status", "Rotating");
+        opMode.telemetry.update();
+
+        frontLeft.setPower(power);
+        frontRight.setPower(-power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
+
+        opMode.sleep(targetInMilis);
+    }
+   /*
+    public void initGyuro(HardwareMap hardwareMap) {
+        parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD, RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        imu = hardwareMap.get(IMU.class, "imu");
+        ypr = imu.getRobotYawPitchRollAngles();
+        imu.initialize(parameters);
+
+
+    }
+
+    */
 
 
 }

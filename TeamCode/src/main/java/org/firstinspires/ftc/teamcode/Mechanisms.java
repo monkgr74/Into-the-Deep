@@ -11,8 +11,8 @@ public class Mechanisms {
     public DcMotor linearSlide;
     public Servo claw;
 
-   // public double open =
-   // public double close =
+   // public double open = 0.83;
+   // public double close = 0.5;
 
     int maxPosition = 4395;
     double slideSpeed = 0.6;
@@ -35,7 +35,12 @@ public class Mechanisms {
     public void extendSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
 
-        //if(direction.equals("up") && )
+        if(direction.equals("up") && pos1 >= 4300) {
+            viperSlide.setPower(0);
+        }
+        if (direction.equals("down") && pos1 == 0) {
+            viperSlide.setPower(0);
+        }
 
         if(direction.equals("up") && pos1 <= maxPosition){
             pos1 += 100;
@@ -48,11 +53,19 @@ public class Mechanisms {
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         viperSlide.setPower(slideSpeed);
     }
+/*
+    public void BasketScorePosition() {
+        viperSlide .setTargetPosition();
+        viperSlide.setPower(0.5);
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    /*
+    }
+
+
     public void initClaw(HardwareMap hardwareMap){
         claw = hardwareMap.get(Servo.class, "Claw");
     }
+
 
     public void openClaw() {
         claw.setPosition(open);
@@ -62,4 +75,5 @@ public class Mechanisms {
     }
 
      */
+
 }
