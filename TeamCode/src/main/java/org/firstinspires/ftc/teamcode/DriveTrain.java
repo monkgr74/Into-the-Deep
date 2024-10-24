@@ -166,5 +166,40 @@ public class DriveTrain {
 
     */
 
+    public void presetA() {
+        // pivot robot 180 degrees from starting angle (counterclockwise if pivoted left, clockwise if pivoted right)
+    }
 
+    public void presetB() {
+        // pivot robot 90 degrees clockwise from starting angle
+
+    }
+
+    public void presetX() {
+        // pivot robot 90 degrees counter clockwise from starting angle
+
+    }
+
+    public void presetY() {
+        // pivot robot to starting position (0 degrees from initialization)
+    }
+
+    public void presetL2() {
+        // shift to regular driving mode. normal teleop driving mode
+    }
+
+    public void presetR2() {
+        /*
+        Shift to inverse driving mode. Inverts driving directions.
+        What would be forward is now backwards.
+        Left would be right.
+        Right would be left.
+        Strafing is also inversed.
+
+        Handy when the front of the robot is facing towards you when driving it,
+        to avoid confusion since you must tilt the joystick to the right for the
+        robot to go left. when using inverse, whichever way you tilt the joystick
+        the robot will move that way without the need to counter steer.
+        */
+    }
 }
