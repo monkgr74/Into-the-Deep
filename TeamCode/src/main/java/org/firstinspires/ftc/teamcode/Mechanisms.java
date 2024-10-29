@@ -34,7 +34,7 @@ public class Mechanisms {
     private double currentRightPosition;
     private double currentMeshPosition;
 
-    int maxPosition = 4395;
+    // int maxPosition = 4395;
     double slideSpeed = 0.6;
 
     LinearOpMode opMode;
