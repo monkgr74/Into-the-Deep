@@ -64,10 +64,10 @@ public class postNut extends LinearOpMode {
             telemetry.update();
 
             telemetry.addData("Viper current", mech.viperSlide.getCurrentPosition());
-            if(gamepad1.dpad_right) {
+            if(gamepad1.dpad_up) {
                 mech.extendSlide("up");
             }
-            if (gamepad1.dpad_left) {
+            if (gamepad1.dpad_down) {
                 mech.extendSlide("down");
             }
 
@@ -75,6 +75,13 @@ public class postNut extends LinearOpMode {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
                 mech.closeClaw();;
+            }
+
+            if(gamepad1.dpad_right) {
+                mech.adjustClawMesh("extend");
+            }
+            if (gamepad1.dpad_left) {
+                mech.adjustClawMesh("retract");
             }
             telemetry.update();
 
