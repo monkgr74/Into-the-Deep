@@ -34,14 +34,7 @@ public class Mechanisms {
 
     public void extendSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
-/*
-        if(direction.equals("up") && pos1 >= 4280) {
-            viperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        if (direction.equals("down") && pos1 == 0) {
-            viperSlide.setPower(0);
-        }
-*/
+
         if(direction.equals("up") && pos1 <= maxPosition){
             pos1 += 100;
         }
@@ -55,7 +48,7 @@ public class Mechanisms {
     }
 /*
     public void BasketScorePosition() {
-        viperSlide .setTargetPosition();
+        viperSlide.setTargetPosition();
         viperSlide.setPower(0.5);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
