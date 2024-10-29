@@ -17,6 +17,7 @@ public class Mechanisms {
    // public double open = 0.83;
    // public double close = 0.5;
 
+    int maxPosition = 4291;
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
     private final double CLAW_LEFT_OPEN = 0.8;
     private final double CLAW_LEFT_CLOSED = 0.5;
@@ -53,13 +54,6 @@ public class Mechanisms {
 
     public void extendSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
-
-        if(direction.equals("up") && pos1 >= 4300) {
-            viperSlide.setPower(0);
-        }
-        if (direction.equals("down") && pos1 == 0) {
-            viperSlide.setPower(0);
-        }
 
         if(direction.equals("up") && pos1 <= maxPosition){
             pos1 += 100;
@@ -128,7 +122,7 @@ public class Mechanisms {
     }
 /*
     public void BasketScorePosition() {
-        viperSlide .setTargetPosition();
+        viperSlide.setTargetPosition();
         viperSlide.setPower(0.5);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
