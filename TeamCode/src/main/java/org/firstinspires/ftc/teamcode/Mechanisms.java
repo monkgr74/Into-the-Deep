@@ -17,13 +17,21 @@ public class Mechanisms {
    // public double open = 0.83;
    // public double close = 0.5;
 
-    // Claw positions
+    // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
     private final double CLAW_LEFT_OPEN = 0.8;
     private final double CLAW_LEFT_CLOSED = 0.5;
     private final double CLAW_RIGHT_OPEN = 0.2;
     private final double CLAW_RIGHT_CLOSED = 0.5;
     private final double CLAW_MESH_EXTENDED = 1.0;
     private final double CLAW_MESH_RETRACTED = 0.0;
+    private final double CLAW_INCREMENT = 0.01;  // Adjust to control speed of adjustment
+    private final double CLAW_MESH_INCREMENT = 0.05;  // Increment value for each step in mesh extension
+
+
+    // Current positions for the claw and mesh
+    private double currentLeftPosition;
+    private double currentRightPosition;
+    private double currentMeshPosition;
 
     int maxPosition = 4395;
     double slideSpeed = 0.6;
@@ -69,34 +77,54 @@ public class Mechanisms {
     public void initClaw(HardwareMap hardwareMap) {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
-        clawMesh = hardwareMap.get(Servo.class, "clawMesh");
 
-        // Set the initial position of the servos
-        setClawPosition(CLAW_LEFT_CLOSED, CLAW_RIGHT_CLOSED);  // Start closed
-        setClawMeshPosition(CLAW_MESH_RETRACTED);  // Start retracted
+        // Start with the claw closed
+        currentLeftPosition = CLAW_LEFT_CLOSED;
+        currentRightPosition = CLAW_RIGHT_CLOSED;
+        clawLeft.setPosition(currentLeftPosition);
+        clawRight.setPosition(currentRightPosition);
     }
 
-    // Set claw open/close position based on input values
-    public void setClawPosition(double leftPosition, double rightPosition) {
-        clawLeft.setPosition(Math.max(CLAW_LEFT_CLOSED, Math.min(leftPosition, CLAW_LEFT_OPEN)));
-        clawRight.setPosition(Math.max(CLAW_RIGHT_CLOSED, Math.min(rightPosition, CLAW_RIGHT_OPEN)));
+    // Method to gradually open the claw
+    public void openClaw() {
+        // Check if current position is less than the max open position
+        if (currentLeftPosition < CLAW_LEFT_OPEN) {
+            currentLeftPosition = Math.min(currentLeftPosition + CLAW_INCREMENT, CLAW_LEFT_OPEN);
+            clawLeft.setPosition(currentLeftPosition);
+        }
+        if (currentRightPosition < CLAW_RIGHT_OPEN) {
+            currentRightPosition = Math.min(currentRightPosition + CLAW_INCREMENT, CLAW_RIGHT_OPEN);
+            clawRight.setPosition(currentRightPosition);
+        }
     }
 
-    // Set claw extend/retract position based on input value
-    public void setClawMeshPosition(double meshPosition) {
-        clawMesh.setPosition(Math.max(CLAW_MESH_RETRACTED, Math.min(meshPosition, CLAW_MESH_EXTENDED)));
+    // Method to gradually close the claw
+    public void closeClaw() {
+        // Check if current position is greater than the max closed position
+        if (currentLeftPosition > CLAW_LEFT_CLOSED) {
+            currentLeftPosition = Math.max(currentLeftPosition - CLAW_INCREMENT, CLAW_LEFT_CLOSED);
+            clawLeft.setPosition(currentLeftPosition);
+        }
+        if (currentRightPosition > CLAW_RIGHT_CLOSED) {
+            currentRightPosition = Math.max(currentRightPosition - CLAW_INCREMENT, CLAW_RIGHT_CLOSED);
+            clawRight.setPosition(currentRightPosition);
+        }
     }
 
-    // Helper methods for incrementing/decrementing positions for finer control
-    public void incrementClawPosition(double increment) {
-        double newLeftPosition = clawLeft.getPosition() + increment;
-        double newRightPosition = clawRight.getPosition() + increment;
-        setClawPosition(newLeftPosition, newRightPosition);
-    }
 
-    public void incrementClawMeshPosition(double increment) {
-        double newMeshPosition = clawMesh.getPosition() + increment;
-        setClawMeshPosition(newMeshPosition);
+    // Method to extend or retract the claw mesh incrementally
+    public void adjustClawMesh(String direction) {
+        // Extend the mesh if the direction is "extend" and the mesh is not fully extended
+        if (direction.equals("extend") && currentMeshPosition < CLAW_MESH_EXTENDED) {
+            currentMeshPosition = Math.min(currentMeshPosition + CLAW_MESH_INCREMENT, CLAW_MESH_EXTENDED);
+        }
+        // Retract the mesh if the direction is "retract" and the mesh is not fully retracted
+        else if (direction.equals("retract") && currentMeshPosition > CLAW_MESH_RETRACTED) {
+            currentMeshPosition = Math.max(currentMeshPosition - CLAW_MESH_INCREMENT, CLAW_MESH_RETRACTED);
+        }
+
+        // Set the servo to the new position
+        clawMesh.setPosition(currentMeshPosition);
     }
 /*
     public void BasketScorePosition() {

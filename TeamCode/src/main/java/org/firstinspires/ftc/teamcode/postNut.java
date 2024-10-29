@@ -70,7 +70,7 @@ public class postNut extends LinearOpMode {
             if (gamepad1.dpad_left) {
                 mech.extendSlide("down");
             }
-            /*
+
             if(gamepad1.right_bumper) {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
@@ -78,7 +78,7 @@ public class postNut extends LinearOpMode {
             }
             telemetry.update();
 
-             */
+
 
             sleep(100);
 
