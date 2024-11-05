@@ -95,9 +95,9 @@ public class Mechanisms {
 
     public void adjustingClawDOWN() {
         if(currentPivotServoPosition > 0){
-           currentPivotServoPosition -= 25;
-           claw.setPosition(currentPivotServoPosition);
-           opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
+            currentPivotServoPosition -= 25;
+            claw.setPosition(currentPivotServoPosition);
+            opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
             opMode.telemetry.update();
         }
     }
@@ -118,7 +118,7 @@ public class Mechanisms {
         clawMesh.setPosition(currentMeshPosition);
     }
 
-    public void BasketScorePosition() {
+    public void basketScorePosition() {
         //viperSlide.setTargetPosition(enter position);
         viperSlide.setPower(0.6);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -126,23 +126,30 @@ public class Mechanisms {
     }
 
     public void zeroPosition() {
-
+        viperSlide.setTargetPosition(0);
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-
-
 /*
-dont remove
-
     public void BasketScorePosition() {
-        viperSlide.setTargetPosition(enter position);
+        viperSlide.setTargetPosition();
         viperSlide.setPower(0.5);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
     }
 
 
+    public void initClaw(HardwareMap hardwareMap){
+        claw = hardwareMap.get(Servo.class, "Claw");
+    }
+
+
+    public void openClaw() {
+        claw.setPosition(open);
+    }
+    public void closeClaw() {
+        claw.setPosition(close);
+    }
 
      */
 

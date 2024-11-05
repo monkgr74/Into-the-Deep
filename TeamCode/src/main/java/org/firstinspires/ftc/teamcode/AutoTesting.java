@@ -25,20 +25,23 @@ public class AutoTesting extends LinearOpMode {
 
         runtime.startTime();
         while(runtime.milliseconds() <= 30000) {
-            drivetrain.moveForward(0.5,1000);
-            drivetrain.rotateRight(0.5, 2000);
-            drivetrain.moveForward(0.5,1000);
-            mech.BasketScorePosition();
-            drivetrain.moveForward(0.5,1000);
+
+            drivetrain.rotateToAngle(270,0.3);
+            drivetrain.moveForward(0.4,1000);
+            mech.basketScorePosition();
             mech.openClaw();
-            drivetrain.rotateRight(0.5,2000);
-            //drivetrain.rotateRight(0.5,1000);
-            drivetrain.moveForward(0.5,1000);
-            drivetrain.rotateRight(0.5,2000);
-            //drivetrain.moveForward(0.5,1000);
+            mech.zeroPosition();
+            drivetrain.rotateToAngle(90, 0.3);
+            drivetrain.moveForward(0.4,1000);
             mech.closeClaw();
-            drivetrain.rotateRight(0.5,1000);
-            drivetrain.moveForward(0.5,1000);
+            drivetrain.rotateToAngle(180, 0.3);
+            drivetrain.moveForward(0.4,1000);
+            drivetrain.rotateToAngle(270, 0.3);
+            drivetrain.moveForward(0.4,1000);
+
+
+
+
 
 
         }
