@@ -22,7 +22,7 @@ public class postNut extends LinearOpMode {
 
         drivetrain.initDriveTrain((hardwareMap));
         mech.initViperSlide(hardwareMap);
-        mech.initClaw(hardwareMap);
+        //mech.initClaw(hardwareMap);
 
 
 
@@ -63,37 +63,25 @@ public class postNut extends LinearOpMode {
             telemetry.addData("Back Right Encoder", drivetrain.backRight.getCurrentPosition());
             telemetry.update();
 
-
-            //controlling viperslide
             telemetry.addData("Viper current", mech.viperSlide.getCurrentPosition());
-            if(gamepad2.dpad_up) {
+            if(gamepad1.dpad_up) {
                 mech.extendSlide("up");
             }
-            if (gamepad2.dpad_down) {
+            if (gamepad1.dpad_down) {
                 mech.extendSlide("down");
             }
-            telemetry.update();
 
-            //controlling claw
             if(gamepad1.right_bumper) {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
                 mech.closeClaw();;
             }
 
-            //adjusting clawMesh
-            if(gamepad2.dpad_right) {
+            if(gamepad1.dpad_right) {
                 mech.adjustClawMesh("extend");
             }
-            if(gamepad2.dpad_left) {
+            if (gamepad1.dpad_left) {
                 mech.adjustClawMesh("retract");
-            }
-
-            if(gamepad1.a){
-                mech.adjustingClawUP();
-            }
-            if(gamepad1.b) {
-                mech.adjustingClawDOWN();
             }
             telemetry.update();
 
