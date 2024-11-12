@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Mechanisms {
     public DcMotor viperSlide;
     public DcMotor linearSlide;
-    public Servo claw;
-
+    public Servo clawLeft;
+    public Servo clawRight;
     public Servo clawMesh;
     // public Servo claw;
 
@@ -19,9 +19,10 @@ public class Mechanisms {
 
     int maxPosition = 4291;
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
-    private final double CLAW_OPEN = 0.8;
-    private final double CLAW_CLOSED = 0.5;
-
+    private final double CLAW_LEFT_OPEN = 0.8;
+    private final double CLAW_LEFT_CLOSED = 0.5;
+    private final double CLAW_RIGHT_OPEN = 0.2;
+    private final double CLAW_RIGHT_CLOSED = 0.5;
     private final double CLAW_MESH_EXTENDED = 1.0;
     private final double CLAW_MESH_RETRACTED = 0.0;
     private final double CLAW_INCREMENT = 0.01;  // Adjust to control speed of adjustment
@@ -29,8 +30,8 @@ public class Mechanisms {
 
 
     // Current positions for the claw and mesh
-    private double currentClawPosition;
-
+    private double currentLeftPosition;
+    private double currentRightPosition;
     private double currentMeshPosition;
 
     // int maxPosition = 4395;
@@ -68,34 +69,40 @@ public class Mechanisms {
 
     // Initialize claw servos
     public void initClaw(HardwareMap hardwareMap) {
-        claw = hardwareMap.get(Servo.class, "claw");
-
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         // Start with the claw closed
-        currentClawPosition = CLAW_CLOSED;
-
-        claw.setPosition(currentClawPosition);
-
+        currentLeftPosition = CLAW_LEFT_CLOSED;
+        currentRightPosition = CLAW_RIGHT_CLOSED;
+        clawLeft.setPosition(currentLeftPosition);
+        clawRight.setPosition(currentRightPosition);
     }
 
     // Method to gradually open the claw
     public void openClaw() {
         // Check if current position is less than the max open position
-        if (currentClawPosition < CLAW_OPEN) {
-            currentClawPosition = Math.min(currentClawPosition + CLAW_INCREMENT, CLAW_OPEN);
-            claw.setPosition(currentClawPosition);
+        if (currentLeftPosition < CLAW_LEFT_OPEN) {
+            currentLeftPosition = Math.min(currentLeftPosition + CLAW_INCREMENT, CLAW_LEFT_OPEN);
+            clawLeft.setPosition(currentLeftPosition);
         }
-
+        if (currentRightPosition < CLAW_RIGHT_OPEN) {
+            currentRightPosition = Math.min(currentRightPosition + CLAW_INCREMENT, CLAW_RIGHT_OPEN);
+            clawRight.setPosition(currentRightPosition);
+        }
     }
 
     // Method to gradually close the claw
     public void closeClaw() {
         // Check if current position is greater than the max closed position
-        if (currentClawPosition > CLAW_CLOSED) {
-            currentClawPosition = Math.max(currentClawPosition - CLAW_INCREMENT, CLAW_CLOSED);
-            claw.setPosition(currentClawPosition);
+        if (currentLeftPosition > CLAW_LEFT_CLOSED) {
+            currentLeftPosition = Math.max(currentLeftPosition - CLAW_INCREMENT, CLAW_LEFT_CLOSED);
+            clawLeft.setPosition(currentLeftPosition);
         }
-
+        if (currentRightPosition > CLAW_RIGHT_CLOSED) {
+            currentRightPosition = Math.max(currentRightPosition - CLAW_INCREMENT, CLAW_RIGHT_CLOSED);
+            clawRight.setPosition(currentRightPosition);
+        }
     }
 
 
@@ -113,10 +120,6 @@ public class Mechanisms {
         // Set the servo to the new position
         clawMesh.setPosition(currentMeshPosition);
     }
-
-    //Code for auto for claw
-
-
 /*
     public void BasketScorePosition() {
         viperSlide.setTargetPosition();

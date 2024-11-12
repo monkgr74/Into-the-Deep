@@ -5,13 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 @TeleOp(name = "postNut")
@@ -71,68 +64,25 @@ public class postNut extends LinearOpMode {
             telemetry.update();
 
             telemetry.addData("Viper current", mech.viperSlide.getCurrentPosition());
-            if(gamepad2.dpad_up) {
+            if(gamepad1.dpad_up) {
                 mech.extendSlide("up");
             }
-            if (gamepad2.dpad_down) {
+            if (gamepad1.dpad_down) {
                 mech.extendSlide("down");
             }
 
-            if(gamepad2.right_bumper) {
+            if(gamepad1.right_bumper) {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
                 mech.closeClaw();;
             }
 
-            if(gamepad2.dpad_right) {
+            if(gamepad1.dpad_right) {
                 mech.adjustClawMesh("extend");
             }
-            if (gamepad2.dpad_left) {
+            if (gamepad1.dpad_left) {
                 mech.adjustClawMesh("retract");
             }
-
-            // movement presets
-            if (gamepad1.a) {
-                // pivot robot 180 degrees from starting angle (counterclockwise if pivoted left, clockwise if pivoted right)
-                drivetrain.rotateToAngle(180);
-            }
-
-            if (gamepad1.b) {
-                drivetrain.rotateToAngle(90);
-            }
-
-            if (gamepad1.x) {
-                // pivot robot 90 degrees counter clockwise from starting angle
-                drivetrain.rotateToAngle(270);
-            }
-
-            if (gamepad1.y) {
-                // pivot robot to starting position (0 degrees from initialization)
-                drivetrain.rotateToAngle(0);
-            }
-
-            if (gamepad1.left_bumper) {
-                // shift to regular driving mode. normal teleop driving mode
-                drivetrain.presetL2();
-            }
-
-            if (gamepad1.right_bumper) {
-                /*
-                Shift to inverse driving mode. Inverts driving directions.
-                What would be forward is now backwards.
-                Left would be right.
-                Right would be left.
-                Strafing is also inversed.
-
-                Handy when the front of the robot is facing towards you when driving it,
-                to avoid confusion since you must tilt the joystick to the right for the
-                robot to go left. when using inverse, whichever way you tilt the joystick
-                the robot will move that way without the need to counter steer.
-                */
-                drivetrain.presetR2();
-            }
-
-
             telemetry.update();
 
 
