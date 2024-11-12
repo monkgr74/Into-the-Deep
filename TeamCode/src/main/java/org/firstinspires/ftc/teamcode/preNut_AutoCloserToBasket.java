@@ -16,10 +16,22 @@ public class preNut_AutoCloserToBasket extends LinearOpMode {
         if(isStopRequested()) {
             return;
         }
+    while(opModeIsActive()) {
 
-        drivetrain.moveForward(0.5,1000);
-        drivetrain.rotate(0.5, 2000);
-        drivetrain.moveForward(0.5,1000);
+        drivetrain.rotateToAngle(-90);
+        drivetrain.moveForward(0.5, 1000);
+        mech.openClaw();
+        drivetrain.rotateToAngle(180);
+        drivetrain.moveForward(0.5, 1000);
+        drivetrain.rotateToAngle(-90);
+        drivetrain.moveForward(0.5, 1000);
+        mech.closeClaw();
+        drivetrain.rotateToAngle(180);
+        drivetrain.moveForward(0.5, 1000);
+
+
+    }
+
        // mech.BasketScorePosition();
 
     }

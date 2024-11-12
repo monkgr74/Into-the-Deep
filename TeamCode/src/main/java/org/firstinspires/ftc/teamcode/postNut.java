@@ -27,8 +27,8 @@ public class postNut extends LinearOpMode {
 
         waitForStart();
 
-        drivetrain.initDriveTrain((hardwareMap));
-        mech.initViperSlide(hardwareMap);
+      drivetrain.initDriveTrain((hardwareMap));
+        //mech.initViperSlide(hardwareMap);
         //mech.initClaw(hardwareMap);
 
 
