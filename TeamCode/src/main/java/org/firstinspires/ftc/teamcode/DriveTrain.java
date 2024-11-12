@@ -143,8 +143,8 @@ public class DriveTrain {
         stopMotors();
     }
 
-    public void rotate(double power, long targetInMilis) {
-        opMode.telemetry.addData("Status", "Rotating");
+    public void rotateRight(double power, long targetInMilis) {
+        opMode.telemetry.addData("Rotating", "Right");
         opMode.telemetry.update();
 
         frontLeft.setPower(power);
@@ -154,6 +154,18 @@ public class DriveTrain {
 
         opMode.sleep(targetInMilis);
     }
+
+    public void rotateLeft(double power, long targetInMilis) {
+        opMode.telemetry.addData("Rotating", "Left");
+        opMode.telemetry.update();
+
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
+
+    }
+
 
    /*
     public void initGyuro(HardwareMap hardwareMap) {
