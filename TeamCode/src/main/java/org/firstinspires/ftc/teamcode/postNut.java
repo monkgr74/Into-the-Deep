@@ -81,15 +81,23 @@ public class postNut extends LinearOpMode {
             if(gamepad2.right_bumper) {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
-                mech.closeClaw();;
+                mech.closeClaw();
             }
 
-            if(gamepad2.dpad_right) {
+            if(gamepad2.a) {
+                mech.activeIntakeIn();
+            }
+
+            if(gamepad2.b) {
+                mech.activeIntakeOut();
+            }
+
+            /* if(gamepad2.dpad_right) {
                 mech.adjustClawMesh("extend");
             }
             if (gamepad2.dpad_left) {
                 mech.adjustClawMesh("retract");
-            }
+            } */
 
             // movement presets
             if (gamepad1.a) {

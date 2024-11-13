@@ -12,6 +12,7 @@ public class Mechanisms {
     public Servo clawMesh;
     public Servo claw;
     public Servo clawPivot;
+    public Servo activeIntake;
     private static final double servo_min_pos = 0;
     private static final double servo_max_pos = 1;
     public double currentPivotServoPosition = 0.5;
@@ -34,6 +35,8 @@ public class Mechanisms {
     private double currentLeftPosition;
     private double currentRightPosition;
     private double currentMeshPosition;
+
+    private boolean isIntakeRunning = false;
 
     // int maxPosition = 4395;
     double slideSpeed = 0.8;
@@ -72,7 +75,36 @@ public class Mechanisms {
     public void initClaw(HardwareMap hardwareMap) {
         clawPivot = hardwareMap.get(Servo.class,"clawPivot");
         claw = hardwareMap.get(Servo.class, "claw");
+        activeIntake = hardwareMap.get(Servo.class,"activeIntake");
         //clawPivot.setPosition(Enter value after claw is built);
+    }
+
+    public void activeIntakeIn() {
+        if (isIntakeRunning){
+            activeIntake.setPosition(0.5);
+            isIntakeRunning = false;
+            opMode.telemetry.addLine("Active intake inwards stopped.");
+            opMode.telemetry.update();
+        } else {
+            activeIntake.setPosition(1.0);
+            isIntakeRunning = true;
+            opMode.telemetry.addLine("Active intake inwards started.");
+            opMode.telemetry.update();
+        }
+    }
+
+    public void activeIntakeOut() {
+        if (isIntakeRunning){
+            activeIntake.setPosition(0.5);
+            isIntakeRunning = false;
+            opMode.telemetry.addLine("Active intake outwards stopped.");
+            opMode.telemetry.update();
+        } else {
+            activeIntake.setPosition(0.0);
+            isIntakeRunning = true;
+            opMode.telemetry.addLine("Active intake outwards started.");
+            opMode.telemetry.update();
+        }
     }
 
     public void openClaw() {
@@ -104,6 +136,7 @@ public class Mechanisms {
 
 
     // Method to extend or retract the claw mesh incrementally
+    /*
     public void adjustClawMesh(String direction) {
         // Extend the mesh if the direction is "extend" and the mesh is not fully extended
         if (direction.equals("extend") && currentMeshPosition < CLAW_MESH_EXTENDED) {
@@ -117,6 +150,7 @@ public class Mechanisms {
         // Set the servo to the new position
         clawMesh.setPosition(currentMeshPosition);
     }
+    */
 
     public void basketScorePosition() {
         //viperSlide.setTargetPosition(enter position);
