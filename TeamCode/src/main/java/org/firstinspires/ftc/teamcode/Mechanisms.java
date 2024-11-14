@@ -9,26 +9,38 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Mechanisms {
     public DcMotor viperSlide;
     public DcMotor linearSlide;
+
+    /*
     public Servo clawMesh;
     public Servo claw;
     public Servo clawPivot;
+
+     */
+    // public DcMotor;
     public Servo activeIntake;
+
+    /*
     private static final double servo_min_pos = 0;
     private static final double servo_max_pos = 1;
     public double currentPivotServoPosition = 0.5;
     public double clawOpen = 0.83;
     public double clawClose = 0.5;
 
+     */
+
     int maxPosition = 4291;
+    /*
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
-    //private final double CLAW_LEFT_OPEN = 0.8;
-    //private final double CLAW_LEFT_CLOSED = 0.5;
-    //private final double CLAW_RIGHT_OPEN = 0.2;
-    //private final double CLAW_RIGHT_CLOSED = 0.5;
+    private final double CLAW_LEFT_OPEN = 0.8;
+    private final double CLAW_LEFT_CLOSED = 0.5;
+    private final double CLAW_RIGHT_OPEN = 0.2;
+    private final double CLAW_RIGHT_CLOSED = 0.5;
     private final double CLAW_MESH_EXTENDED = 1.0;
     private final double CLAW_MESH_RETRACTED = 0.0;
     private final double CLAW_INCREMENT = 0.01;  // Adjust to control speed of adjustment
     private final double CLAW_MESH_INCREMENT = 0.05;  // Increment value for each step in mesh extension
+
+     */
 
 
     // Current positions for the claw and mesh
@@ -72,12 +84,16 @@ public class Mechanisms {
     }
 
     // Initialize claw servos
+
+    /*
     public void initClaw(HardwareMap hardwareMap) {
         clawPivot = hardwareMap.get(Servo.class,"clawPivot");
         claw = hardwareMap.get(Servo.class, "claw");
         activeIntake = hardwareMap.get(Servo.class,"activeIntake");
         //clawPivot.setPosition(Enter value after claw is built);
     }
+
+     */
 
     public void activeIntakeIn() {
         if (isIntakeRunning){
@@ -107,16 +123,18 @@ public class Mechanisms {
         }
     }
 
-    public void openClaw() {
+    /*
+
+   public void openClaw() {
         claw.setPosition(clawOpen);
     }
 
-    public void closeClaw() {
+  public void closeClaw() {
         claw.setPosition(clawClose);
     }
 
-    public void adjustingClawUP() {
-        if(currentPivotServoPosition < 1) {
+  public void adjustingClawUP() {
+      if(currentPivotServoPosition < 1) {
             currentPivotServoPosition += 0.25;
             claw.setPosition(currentPivotServoPosition);
             opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
@@ -126,7 +144,7 @@ public class Mechanisms {
     }
 
     public void adjustingClawDOWN() {
-        if(currentPivotServoPosition > 0){
+        if(currentPivotServoPosition > 0) {
             currentPivotServoPosition -= 25;
             claw.setPosition(currentPivotServoPosition);
             opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
@@ -152,6 +170,8 @@ public class Mechanisms {
     }
     */
 
+    /*
+
     public void basketScorePosition() {
         //viperSlide.setTargetPosition(enter position);
         viperSlide.setPower(0.6);
@@ -163,6 +183,9 @@ public class Mechanisms {
         viperSlide.setTargetPosition(0);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+     */
+
 
 /*
     public void BasketScorePosition() {
