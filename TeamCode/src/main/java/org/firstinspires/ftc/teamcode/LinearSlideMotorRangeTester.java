@@ -15,7 +15,7 @@ public class LinearSlideMotorRangeTester extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the motor
-        DcMotor motor = hardwareMap.get(DcMotor.class, "linearSlide");
+        DcMotor motor = hardwareMap.get(DcMotor.class, "arm");
 
         // Reset the encoder to start from 0
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

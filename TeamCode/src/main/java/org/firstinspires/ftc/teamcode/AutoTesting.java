@@ -14,7 +14,7 @@ public class AutoTesting extends LinearOpMode {
         drivetrain.initDriveTrain(hardwareMap);
         Mechanisms mech = new Mechanisms(this);
         mech.initViperSlide(hardwareMap);
-        mech.initClaw(hardwareMap);
+
 
 
         waitForStart();
@@ -28,12 +28,12 @@ public class AutoTesting extends LinearOpMode {
 
             drivetrain.rotateToAngle(270,0.3);
             drivetrain.moveForward(0.4,1000);
-            mech.basketScorePosition();
-            mech.openClaw();
-            mech.zeroPosition();
+           // mech.basketScorePosition();
+           // mech.openClaw();
+           // mech.zeroPosition();
             drivetrain.rotateToAngle(90, 0.3);
             drivetrain.moveForward(0.4,1000);
-            mech.closeClaw();
+          //  mech.closeClaw();
             drivetrain.rotateToAngle(180, 0.3);
             drivetrain.moveForward(0.4,1000);
             drivetrain.rotateToAngle(270, 0.3);
