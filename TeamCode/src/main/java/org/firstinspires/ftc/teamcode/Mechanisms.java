@@ -9,20 +9,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Mechanisms {
     public DcMotor viperSlide;
     public DcMotor linearSlide;
-    public Servo clawLeft;
-    public Servo clawRight;
     public Servo clawMesh;
-    // public Servo claw;
-
-   // public double open = 0.83;
-   // public double close = 0.5;
+    public Servo claw;
+    public Servo clawPivot;
+    public Servo activeIntake;
+    private static final double servo_min_pos = 0;
+    private static final double servo_max_pos = 1;
+    public double currentPivotServoPosition = 0.5;
+    public double clawOpen = 0.83;
+    public double clawClose = 0.5;
 
     int maxPosition = 4291;
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
-    private final double CLAW_LEFT_OPEN = 0.8;
-    private final double CLAW_LEFT_CLOSED = 0.5;
-    private final double CLAW_RIGHT_OPEN = 0.2;
-    private final double CLAW_RIGHT_CLOSED = 0.5;
+    //private final double CLAW_LEFT_OPEN = 0.8;
+    //private final double CLAW_LEFT_CLOSED = 0.5;
+    //private final double CLAW_RIGHT_OPEN = 0.2;
+    //private final double CLAW_RIGHT_CLOSED = 0.5;
     private final double CLAW_MESH_EXTENDED = 1.0;
     private final double CLAW_MESH_RETRACTED = 0.0;
     private final double CLAW_INCREMENT = 0.01;  // Adjust to control speed of adjustment
@@ -34,8 +36,10 @@ public class Mechanisms {
     private double currentRightPosition;
     private double currentMeshPosition;
 
+    private boolean isIntakeRunning = false;
+
     // int maxPosition = 4395;
-    double slideSpeed = 0.6;
+    double slideSpeed = 0.8;
 
     LinearOpMode opMode;
 
@@ -55,11 +59,11 @@ public class Mechanisms {
     public void extendSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
 
-        if(direction.equals("up") && pos1 <= maxPosition){
-            pos1 += 100;
+        if(direction.equals("up") && pos1 < maxPosition){
+            pos1 += 50;
         }
-        else if(direction.equals("down") && pos1 <= maxPosition) {
-            pos1 -= 100;
+        else if(direction.equals("down") && pos1 > 0) {
+            pos1 -= 50;
         }
 
         viperSlide.setTargetPosition(pos1);
@@ -69,44 +73,70 @@ public class Mechanisms {
 
     // Initialize claw servos
     public void initClaw(HardwareMap hardwareMap) {
-        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-        clawRight = hardwareMap.get(Servo.class, "clawRight");
-
-        // Start with the claw closed
-        currentLeftPosition = CLAW_LEFT_CLOSED;
-        currentRightPosition = CLAW_RIGHT_CLOSED;
-        clawLeft.setPosition(currentLeftPosition);
-        clawRight.setPosition(currentRightPosition);
+        clawPivot = hardwareMap.get(Servo.class,"clawPivot");
+        claw = hardwareMap.get(Servo.class, "claw");
+        activeIntake = hardwareMap.get(Servo.class,"activeIntake");
+        //clawPivot.setPosition(Enter value after claw is built);
     }
 
-    // Method to gradually open the claw
+    public void activeIntakeIn() {
+        if (isIntakeRunning){
+            activeIntake.setPosition(0.5);
+            isIntakeRunning = false;
+            opMode.telemetry.addLine("Active intake inwards stopped.");
+            opMode.telemetry.update();
+        } else {
+            activeIntake.setPosition(1.0);
+            isIntakeRunning = true;
+            opMode.telemetry.addLine("Active intake inwards started.");
+            opMode.telemetry.update();
+        }
+    }
+
+    public void activeIntakeOut() {
+        if (isIntakeRunning){
+            activeIntake.setPosition(0.5);
+            isIntakeRunning = false;
+            opMode.telemetry.addLine("Active intake outwards stopped.");
+            opMode.telemetry.update();
+        } else {
+            activeIntake.setPosition(0.0);
+            isIntakeRunning = true;
+            opMode.telemetry.addLine("Active intake outwards started.");
+            opMode.telemetry.update();
+        }
+    }
+
     public void openClaw() {
-        // Check if current position is less than the max open position
-        if (currentLeftPosition < CLAW_LEFT_OPEN) {
-            currentLeftPosition = Math.min(currentLeftPosition + CLAW_INCREMENT, CLAW_LEFT_OPEN);
-            clawLeft.setPosition(currentLeftPosition);
-        }
-        if (currentRightPosition < CLAW_RIGHT_OPEN) {
-            currentRightPosition = Math.min(currentRightPosition + CLAW_INCREMENT, CLAW_RIGHT_OPEN);
-            clawRight.setPosition(currentRightPosition);
-        }
+        claw.setPosition(clawOpen);
     }
 
-    // Method to gradually close the claw
     public void closeClaw() {
-        // Check if current position is greater than the max closed position
-        if (currentLeftPosition > CLAW_LEFT_CLOSED) {
-            currentLeftPosition = Math.max(currentLeftPosition - CLAW_INCREMENT, CLAW_LEFT_CLOSED);
-            clawLeft.setPosition(currentLeftPosition);
+        claw.setPosition(clawClose);
+    }
+
+    public void adjustingClawUP() {
+        if(currentPivotServoPosition < 1) {
+            currentPivotServoPosition += 0.25;
+            claw.setPosition(currentPivotServoPosition);
+            opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
+            opMode.telemetry.update();
         }
-        if (currentRightPosition > CLAW_RIGHT_CLOSED) {
-            currentRightPosition = Math.max(currentRightPosition - CLAW_INCREMENT, CLAW_RIGHT_CLOSED);
-            clawRight.setPosition(currentRightPosition);
+
+    }
+
+    public void adjustingClawDOWN() {
+        if(currentPivotServoPosition > 0){
+            currentPivotServoPosition -= 25;
+            claw.setPosition(currentPivotServoPosition);
+            opMode.telemetry.addData("Claw Pivot Position", currentPivotServoPosition);
+            opMode.telemetry.update();
         }
     }
 
 
     // Method to extend or retract the claw mesh incrementally
+    /*
     public void adjustClawMesh(String direction) {
         // Extend the mesh if the direction is "extend" and the mesh is not fully extended
         if (direction.equals("extend") && currentMeshPosition < CLAW_MESH_EXTENDED) {
@@ -120,6 +150,20 @@ public class Mechanisms {
         // Set the servo to the new position
         clawMesh.setPosition(currentMeshPosition);
     }
+    */
+
+    public void basketScorePosition() {
+        //viperSlide.setTargetPosition(enter position);
+        viperSlide.setPower(0.6);
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        adjustingClawUP();
+    }
+
+    public void zeroPosition() {
+        viperSlide.setTargetPosition(0);
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
 /*
     public void BasketScorePosition() {
         viperSlide.setTargetPosition();

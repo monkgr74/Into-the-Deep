@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,8 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class DriveTrain {
 
@@ -18,11 +18,9 @@ public class DriveTrain {
     public DcMotor backLeft;
     public DcMotor frontRight;
     public DcMotor backRight;
-    IMU imu;
-    IMU.Parameters parameters;
-    YawPitchRollAngles ypr;
+    public IMU imu;
 
-    private Orientation angles;
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -33,6 +31,16 @@ public class DriveTrain {
     }
 
     public void initDriveTrain(HardwareMap hardwareMap) {
+        // imu tomfoolery
+        imu = hardwareMap.get(IMU.class, "imu"); // Match the name in the configuration
+        IMU.Parameters parameters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,  // Logo facing backward
+                        RevHubOrientationOnRobot.UsbFacingDirection.UP          // USB ports facing up
+                )
+        );
+        imu.initialize(parameters);
+
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         backLeft= hardwareMap.get(DcMotor.class, "backLeftMotor");
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
@@ -42,7 +50,6 @@ public class DriveTrain {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
-
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,7 +61,6 @@ public class DriveTrain {
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
         frontLeft.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
         frontRight.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
         backLeft.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
@@ -64,15 +70,11 @@ public class DriveTrain {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-
-
-
     }
 
     public void stopMotors(){
         opMode.telemetry.addData("Status", "Stopped");
         opMode.telemetry.update();
-
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -143,7 +145,7 @@ public class DriveTrain {
         stopMotors();
     }
 
-    public void rotateRight(double power, long targetInMilis) {
+    public void rotate(double power, long targetInMilis) {
         opMode.telemetry.addData("Status", "Rotating");
         opMode.telemetry.update();
 
@@ -155,16 +157,45 @@ public class DriveTrain {
         opMode.sleep(targetInMilis);
     }
 
-    public void rotateLeft(double power, long targetInMilis) {
-        opMode.telemetry.addData("Status", "Rotating");
-        opMode.telemetry.update();
+    public void rotateToAngle(double targetAngle, double power) {
+        double tolerance = 1.0; // Tolerance in degrees for accuracy
+        double currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
 
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
+        // Normalize target angle to be within 0-360 range
+        targetAngle = ((targetAngle % 360) + 360) % 360;
 
-        opMode.sleep(targetInMilis);
+        // Loop until within tolerance of target angle
+        while (opMode.opModeIsActive()) {
+            currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
+
+            // Calculate the difference between current and target angles
+            double angleDiff = (targetAngle - currentAngle + 360) % 360;
+
+            // If the angle difference is greater than 180, it's shorter to rotate in the opposite direction
+            if (angleDiff > 180) {
+                angleDiff -= 360; // Rotate counterclockwise instead of clockwise
+            }
+
+            // Check if we're within the target tolerance
+            if (Math.abs(angleDiff) < tolerance) {
+                break;
+            }
+
+            // Determine the rotation direction based on angle difference
+            double direction = angleDiff > 0 ? 1 : -1; // Clockwise if positive, counterclockwise if negative
+
+            // Rotate with the calculated power and direction
+            rotate(direction * power, 50); // Rotate for a small increment (e.g., 50 ms)
+
+            // Telemetry for debugging
+            opMode.telemetry.addData("Target Angle", targetAngle);
+            opMode.telemetry.addData("Current Angle", currentAngle);
+            opMode.telemetry.addData("Angle Difference", angleDiff);
+            opMode.telemetry.update();
+        }
+
+        // Stop the motors once the target angle is reached
+        stopMotors();
     }
 
 
@@ -180,40 +211,10 @@ public class DriveTrain {
 
     */
 
-    public void presetA() {
-        // pivot robot 180 degrees from starting angle (counterclockwise if pivoted left, clockwise if pivoted right)
-    }
-
-    public void presetB() {
-        // pivot robot 90 degrees clockwise from starting angle
-
-    }
-
-    public void presetX() {
-        // pivot robot 90 degrees counter clockwise from starting angle
-
-    }
-
-    public void presetY() {
-        // pivot robot to starting position (0 degrees from initialization)
-    }
-
     public void presetL2() {
-        // shift to regular driving mode. normal teleop driving mode
     }
 
     public void presetR2() {
-        /*
-        Shift to inverse driving mode. Inverts driving directions.
-        What would be forward is now backwards.
-        Left would be right.
-        Right would be left.
-        Strafing is also inversed.
 
-        Handy when the front of the robot is facing towards you when driving it,
-        to avoid confusion since you must tilt the joystick to the right for the
-        robot to go left. when using inverse, whichever way you tilt the joystick
-        the robot will move that way without the need to counter steer.
-        */
     }
 }
