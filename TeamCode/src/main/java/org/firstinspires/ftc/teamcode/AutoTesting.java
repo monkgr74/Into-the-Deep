@@ -30,13 +30,12 @@ public class AutoTesting extends LinearOpMode {
             drivetrain.moveForward(0.5,1000);
             mech.BasketScorePosition();
             drivetrain.moveForward(0.5,1000);
-            mech.openClaw();
+            mech.toggleServoDirection("backward");
             drivetrain.rotateRight(0.5,2000);
-            //drivetrain.rotateRight(0.5,1000);
+            mech.zeroPosition();
             drivetrain.moveForward(0.5,1000);
             drivetrain.rotateRight(0.5,2000);
-            //drivetrain.moveForward(0.5,1000);
-            mech.closeClaw();
+            mech.toggleServoDirection("forward");
             drivetrain.rotateRight(0.5,1000);
             drivetrain.moveForward(0.5,1000);
 

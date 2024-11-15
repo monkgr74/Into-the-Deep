@@ -22,7 +22,9 @@ public class postNut extends LinearOpMode {
 
         drivetrain.initDriveTrain((hardwareMap));
         mech.initViperSlide(hardwareMap);
-        //mech.initClaw(hardwareMap);
+        mech.initClaw(hardwareMap);
+        mech.initMessumiSlides(hardwareMap);
+        mech.initArmMotor(hardwareMap);
 
 
 
@@ -36,16 +38,14 @@ public class postNut extends LinearOpMode {
             time = runtime.startTime();
             telemetry.addData("RunTime", time);
             telemetry.update();
-            double y = -gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x;
+            double y = -gamepad2.left_stick_y;
+            double x = gamepad2.left_stick_x * 1.1;
+            double rx = gamepad2.right_stick_x;
             //double speedScale = 0.8;
            // double linearSlideUp = gamepad1.right_trigger;
            // double linearSLideDown = gamepad1.left_trigger;
 
-            //Denominator is the largest motor power (abs value) or 1
-            //This ensures all the powers maintain the same ratio,
-            //but only if at least one is out of the range [-1,1]
+
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = (y + x + rx)/denominator;
             double backLeftPower = (y - x + rx)/denominator;
@@ -64,24 +64,30 @@ public class postNut extends LinearOpMode {
             telemetry.update();
 
             telemetry.addData("Viper current", mech.viperSlide.getCurrentPosition());
-            if(gamepad1.dpad_up) {
-                mech.extendSlide("up");
+            if(gamepad2.dpad_up) {
+                mech.extendViperSlide("up");
             }
-            if (gamepad1.dpad_down) {
-                mech.extendSlide("down");
+            if (gamepad2.dpad_down) {
+                mech.extendViperSlide("down");
             }
 
             if(gamepad1.right_bumper) {
                 mech.openClaw();
             } else if(gamepad1.left_bumper) {
-                mech.closeClaw();;
+                mech.closeClaw();
             }
 
-            if(gamepad1.dpad_right) {
-                mech.adjustClawMesh("extend");
+            if(gamepad1.a) {
+                mech.toggleServoDirection("forward");
             }
-            if (gamepad1.dpad_left) {
-                mech.adjustClawMesh("retract");
+            if (gamepad1.b) {
+                mech.toggleServoDirection("backward");
+            }
+
+            if(gamepad2.dpad_right){
+                mech.extendMessumiSlides("up");
+            } else if(gamepad2.dpad_left) {
+                mech.extendMessumiSlides("down");
             }
             telemetry.update();
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,9 +10,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Mechanisms {
     public DcMotor viperSlide;
     public DcMotor linearSlide;
-    public Servo clawMesh;
+    public DcMotor MessumiSlideLeft;
+    public DcMotor MessumiSlideRight;
+    public DcMotor armMotor;
+    //public Servo clawMesh;
     public Servo claw;
     public Servo clawPivot;
+    public CRServo intakeServo;
+    private boolean isForwardActive = false;
+    private boolean isBackwardActive = false;
+
     private static final double servo_min_pos = 0;
     private static final double servo_max_pos = 1;
     public double currentPivotServoPosition = 0.5;
@@ -19,6 +27,7 @@ public class Mechanisms {
     public double clawClose = 0.5;
 
     int maxPosition = 4291;
+    int MessumiMaxPosition = 0; // Change it
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
     //private final double CLAW_LEFT_OPEN = 0.8;
     //private final double CLAW_LEFT_CLOSED = 0.5;
@@ -53,7 +62,35 @@ public class Mechanisms {
         viperSlide.setPower(0);
     }
 
-    public void extendSlide(String direction) {
+    public void initMessumiSlides(HardwareMap hardwareMap){
+        MessumiSlideLeft = hardwareMap.get(DcMotor.class, "MessumiSlideLeft");
+        MessumiSlideRight = hardwareMap.get(DcMotor.class, "MessumiSlideRight");
+
+        MessumiSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        MessumiSlideRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        MessumiSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MessumiSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        MessumiSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MessumiSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MessumiSlideLeft.setPower(0);
+
+        MessumiSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MessumiSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MessumiSlideRight.setPower(0);
+    }
+
+    public void initArmMotor(HardwareMap hardwareMap) {
+        armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        armMotor.setPower(0);
+    }
+
+    public void extendViperSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
 
         if(direction.equals("up") && pos1 < maxPosition){
@@ -68,10 +105,24 @@ public class Mechanisms {
         viperSlide.setPower(slideSpeed);
     }
 
-    // Initialize claw servos
+    public void extendMessumiSlides(String direction){
+        int posLeft = MessumiSlideLeft.getCurrentPosition();
+        int posRight = MessumiSlideRight.getCurrentPosition();
+
+        if(direction.equals("up") && posLeft < MessumiMaxPosition && posRight < MessumiMaxPosition) {
+            posLeft += 50;
+            posRight += 50;
+        } else if (direction.equals("down") && posLeft > 0 && posRight > 0) {
+            posLeft -= 50;
+            posRight -= 50;
+        }
+    }
+
     public void initClaw(HardwareMap hardwareMap) {
         clawPivot = hardwareMap.get(Servo.class,"clawPivot");
         claw = hardwareMap.get(Servo.class, "claw");
+        intakeServo = hardwareMap.get(CRServo.class, "inTakeServo");
+        intakeServo.setDirection(CRServo.Direction.FORWARD);
         //clawPivot.setPosition(Enter value after claw is built);
     }
 
@@ -102,9 +153,35 @@ public class Mechanisms {
         }
     }
 
+    public void toggleServoDirection(String direction) {
+        switch(direction) {
+            case "forward":
+                if(isBackwardActive) {
+                    isBackwardActive = false;
+                }
+                isForwardActive = !isBackwardActive;
+                intakeServo.setPower(isForwardActive ? 1.0 : 0);
+                break;
+
+            case "backward":
+                if(isForwardActive) {
+                    isForwardActive = false;
+                }
+                isBackwardActive = !isBackwardActive;
+                intakeServo.setPower(isBackwardActive ? -1.0:0);
+                break;
+
+            case "stop":
+                isForwardActive = false;
+                isBackwardActive = false;
+                intakeServo.setPower(0);
+                break;
+        }
+    }
+
 
     // Method to extend or retract the claw mesh incrementally
-    public void adjustClawMesh(String direction) {
+  /*  public void adjustClawMesh(String direction) {
         // Extend the mesh if the direction is "extend" and the mesh is not fully extended
         if (direction.equals("extend") && currentMeshPosition < CLAW_MESH_EXTENDED) {
             currentMeshPosition = Math.min(currentMeshPosition + CLAW_MESH_INCREMENT, CLAW_MESH_EXTENDED);
@@ -118,6 +195,8 @@ public class Mechanisms {
         clawMesh.setPosition(currentMeshPosition);
     }
 
+   */
+
     public void BasketScorePosition() {
         //viperSlide.setTargetPosition(enter position);
         viperSlide.setPower(0.6);
@@ -126,7 +205,10 @@ public class Mechanisms {
     }
 
     public void zeroPosition() {
-
+        viperSlide.setTargetPosition(0);
+        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        claw.setPosition(0);
+        openClaw();
     }
 
 
