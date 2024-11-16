@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -157,6 +158,18 @@ public class DriveTrain {
         opMode.sleep(targetInMilis);
     }
 
+    public void rotateRight(double power, long targetInMilis) {
+        opMode.telemetry.addData("Status", "Rotating");
+        opMode.telemetry.update();
+
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
+
+        opMode.sleep(targetInMilis);
+    }
+
     public void rotateToAngle(double targetAngle, double power) {
         double tolerance = 1.0; // Tolerance in degrees for accuracy
         double currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
@@ -197,6 +210,8 @@ public class DriveTrain {
         // Stop the motors once the target angle is reached
         stopMotors();
     }
+
+
 
 
    /*

@@ -24,7 +24,7 @@ public class preNut_AutoCloserToBasket extends LinearOpMode {
         while(runtime.milliseconds()<=30000){
             drivetrain.rotateToAngle(270,0.3);
             drivetrain.moveForward(0.4,1000);
-            mech.basketScorePosition();
+            //mech.basketScorePosition();
             mech.zeroPosition();
             drivetrain.rotateToAngle(90,0.3);
             drivetrain.moveForward(0.4,1000);
