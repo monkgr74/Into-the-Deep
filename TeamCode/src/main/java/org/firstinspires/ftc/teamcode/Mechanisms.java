@@ -26,6 +26,7 @@ public class Mechanisms {
     public double clawOpen = 0.83;
     public double clawClose = 0.5;
 
+
     int maxPosition = 4291;
     int MessumiMaxPosition = 0; // Change it
     // Claw positions (ALL OF THESE MUST BE ADJUSTED!!!!1!!1!!)
@@ -236,14 +237,19 @@ public class Mechanisms {
         }
         intakeServo.setPower(power);
     }
-
+/*
     public void armPreset() {
         armMotor.setPower(1.7);
         armMotor.setTargetPosition();
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+ */
+
+
     // Method to extend or retract the claw mesh incrementally
   /*  public void adjustClawMesh(String direction) {
+
         // Extend the mesh if the direction is "extend" and the mesh is not fully extended
         if (direction.equals("extend") && currentMeshPosition < CLAW_MESH_EXTENDED) {
             currentMeshPosition = Math.min(currentMeshPosition + CLAW_MESH_INCREMENT, CLAW_MESH_EXTENDED);

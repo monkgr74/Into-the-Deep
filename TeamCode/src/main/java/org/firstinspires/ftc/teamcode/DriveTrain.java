@@ -36,20 +36,22 @@ public class DriveTrain {
         imu = hardwareMap.get(IMU.class, "imu"); // Match the name in the configuration
         IMU.Parameters parameters = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,  // Logo facing backward
-                        RevHubOrientationOnRobot.UsbFacingDirection.UP          // USB ports facing up
+                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,  // Logo facing backward
+                        RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD         // USB ports facing up
                 )
         );
         imu.initialize(parameters);
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        backLeft= hardwareMap.get(DcMotor.class, "backLeftMotor");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backLeft= hardwareMap.get(DcMotor.class, "backLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE)
+
+        ;
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
