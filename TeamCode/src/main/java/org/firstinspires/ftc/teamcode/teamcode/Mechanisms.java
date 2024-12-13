@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -26,6 +25,11 @@ public class Mechanisms {
     public double currentPivotServoPosition = 0.5;
     //public double clawOpen = 0.83;
     //public double clawClose = 0.5;
+
+    final double TICKS_PER_REV = 100;
+
+
+    boolean limitPlaced = false;
 
 
     int maxPosition = 4291;
@@ -163,6 +167,9 @@ public class Mechanisms {
         viperSlide.setPower(1.7);
     }
 
+
+
+
     /*
     public void extendMessumiSlides(String direction){
         int posLeft = MessumiSlideLeft.getCurrentPosition();
@@ -180,9 +187,72 @@ public class Mechanisms {
 
      */
 
+    /*
+    distance per tick = (lead screw pith)/(encoder ticks per revolution)
+     */
+
 
     public void pivotLimit(){
-        //
+
+        int pos1 = armMotor.getCurrentPosition();
+        int ticksPerRev = 1538;
+
+        double degrees = (armMotor.getCurrentPosition()/ticksPerRev) * 360;
+        double angleRadians = Math.toRadians(degrees);
+
+        double tanget = 26 * Math.tan(angleRadians); // height
+        double hypotenuse = Math.sqrt((26*26) + (tanget * tanget));
+
+        if(viperSlide.getCurrentPosition() == 90) {
+            double newDegree = 180-getAngle();
+        }
+        if(viperSlide.getCurrentPosition() == 270){
+            double newDegree = 270-getAngle();
+            double angleToRadians = Math.toRadians(newDegree);
+
+        }
+        //102mmrevolution
+
+
+        if(!checkHorizontal() || !checkVerticall()) {
+
+        }
+    }
+
+    public double getAngle() {
+        int tickersPerRev = 312;
+        double degrees = (armMotor.getCurrentPosition() / tickersPerRev) * 360;
+        opMode.telemetry.addData("Angle", degrees);
+
+        return degrees;
+    }
+
+    public boolean checkHorizontal() {
+        int pos = armMotor.getCurrentPosition();
+
+        if(pos == 0) {//change the values
+            limitPlaced = true;
+        }
+        if(pos < 0){
+            limitPlaced = false;
+        }
+        if(pos > 0) {
+            //
+        }
+
+        return limitPlaced;
+    }
+
+    public boolean checkVerticall() {
+        int pos1 = armMotor.getCurrentPosition();
+
+        if(pos1 == 90){
+            limitPlaced = false;
+        }
+        if(pos1 < 90 || pos1 > 90){
+            limitPlaced = true;
+        }
+        return limitPlaced;
     }
 
 
@@ -332,7 +402,7 @@ public class Mechanisms {
         armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-
+// anuj was here
     public void zeroPosition() {
         viperSlide.setTargetPosition(0);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -351,7 +421,7 @@ public class Mechanisms {
 
 
 /*
-dont remove
+dont remove. i shall remove it - anuj
 
     public void BasketScorePosition() {
         viperSlide.setTargetPosition(enter position);
@@ -360,7 +430,7 @@ dont remove
 
 
     }
-
+yo whats good everybody its your boy mindofrez and you already knooooow and today...
 
 
      */
