@@ -36,7 +36,7 @@ public class postNut extends LinearOpMode {
 
         //This is loop that checks the gamepad fr inputs every iteration
         while (opModeIsActive()) {
-            mech.armPreset();
+            //mech.armPreset();
 
 
             time = runtime.startTime();

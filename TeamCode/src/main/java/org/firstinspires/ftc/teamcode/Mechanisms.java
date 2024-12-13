@@ -237,14 +237,62 @@ public class Mechanisms {
         }
         intakeServo.setPower(power);
     }
-/*
+
     public void armPreset() {
         armMotor.setPower(1.7);
         armMotor.setTargetPosition();
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
- */
+    /*
+    public void setLimitTo22() {
+        int pos1 = viperSlide.getCurrentPosition();
+        double TPR = 2994.6;
+        double ticks = 22*1993.6;
+        extendViperSlide();
+        pos1 <= ticks;
+    }
+    public void setLimit() {
+        if(viperSlide.getCurrentPosition() < 710) {
+            extendViperSlide(String "up");
+
+        }
+            setLimitTo22();
+
+    }
+
+
+//at 90 degrees it can extend fully
+    public void scorePosition() {
+        double angleToTick = 90*(1993.6/360);
+//find ticks using experimental data through driver hub
+        //pos2 is basically the angle that the viperslide gear is at
+       if(pos2 != angleToTick) {
+          double limit = 710;
+               extendViperSlideMeetTwo();
+       }
+       else {
+           extendViperSlide()
+       }
+    }
+
+     */
+
+public void extendViperSlideMeetTwo(String direction) {
+    int pos1 = viperSlide.getCurrentPosition();
+
+    if(direction.equals("up") && pos1 < 710){
+        pos1 += 50;
+    }
+    else if(direction.equals("down") && pos1 > 0) {
+        pos1 -= 50;
+    }
+
+
+
+
+
+
 
 
     // Method to extend or retract the claw mesh incrementally
