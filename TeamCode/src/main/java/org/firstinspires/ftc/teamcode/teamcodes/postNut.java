@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,10 +20,7 @@ public class postNut extends LinearOpMode {
         waitForStart();
 
         drivetrain.initDriveTrain((hardwareMap));
-        mech.initViperSlide(hardwareMap);
-        mech.initClaw(hardwareMap);
-        //mech.initMessumiSlides(hardwareMap);
-        mech.initArmMotor(hardwareMap);
+        mech.initMechanisms(hardwareMap);
 
 
 
@@ -80,11 +77,13 @@ public class postNut extends LinearOpMode {
             if(viperSlide > 0) {
                 //mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
                 //mech.viperSlide.setPower(viperSlide/ 1.5);
+                mech.pivotLimit1();
                 mech.extendViperSlide("up", viperSlide);
             }
             else if(viperSlide<0) {
                 //mech.viperSlide.setDirection(DcMotorSimple.Direction.REVERSE);
                 //mech.viperSlide.setPower(viperSlide/ 1.5);
+                mech.pivotLimit1();
                 mech.extendViperSlide("down", viperSlide);
             }
             else {
@@ -97,24 +96,31 @@ public class postNut extends LinearOpMode {
             double armMotor = gamepad2.left_stick_y;
             telemetry.addData("armMotorPosition", mech.armMotor.getCurrentPosition());
             if(armMotor > 0) {
-                mech.armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                mech.armMotor.setPower(armMotor/ 0.5);
+                //mech.armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                //mech.armMotor.setPower(armMotor/ 0.5);
+
+                mech.pivotLimit1();
+                mech.moveArmMotor("up",armMotor);
             }
             else if(armMotor<0) {
-                mech.armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                mech.armMotor.setPower(armMotor/ 0.5);
+                //mech.armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                //mech.armMotor.setPower(armMotor/ 0.5);
+
+                mech.pivotLimit1();
+                mech.moveArmMotor("down", armMotor);
             }
             else {
-                mech.armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                mech.armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
                 mech.armMotor.setPower(0);
 
             }
             telemetry.update();
 
-            if(gamepad2.a) {
+
+            if(gamepad2.x) {
                 mech.setClawOpen();
             }
-            if(gamepad2.b) {
+            if(gamepad2.y) {
                 mech.setClawClose();
             }
             double intakeServoIn = gamepad2.right_trigger;

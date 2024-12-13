@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,13 +30,15 @@ public class Mechanisms {
     private static final double DISTANCE_PER_TICK_INCHES = (DISTANCE_PER_REV_MM / TICKS_PER_REV) / MM_TO_INCHES;
 
     boolean limitPlaced = false;
+    boolean allowExtension = false;
+    boolean allowPivot = false;
 
-
+    int MaximumArmLimit = 100; //change value
     int maxPosition = 4291;
     int maximumLimit = 43991; //change value
     //int MessumiMaxPosition = 0; // Change it
-    // int maxPosition = 4395;
     double slideSpeed = 1.0;
+    // int maxPosition = 4395;
 
     LinearOpMode opMode;
     public Mechanisms (LinearOpMode op){
@@ -130,25 +132,27 @@ public class Mechanisms {
         }
     }
 
-
     public void moveArmMotorAuto(int desiredPosition) {
         armMotor.getCurrentPosition();
         armMotor.setTargetPosition(desiredPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void moveArmMotor(String direction) {
+    public void moveArmMotor(String direction, double input) {
         int pos1 = armMotor.getCurrentPosition();
 
-        if(direction.equals("up") && pos1 < maximumLimit) {
-            pos1 += 20;
-        } else if(direction.equals("down") && pos1 > 0) {
-            pos1 -= 20;
+        if(direction.equals("up") && pos1 < MaximumArmLimit && input >0) {
+            armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            armMotor.setPower(input/0.5);
+
+        } else if(direction.equals("down") && pos1 > 0 && input < 0) {
+            armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            armMotor.setPower(input/0.5);
         }
 
         armMotor.setTargetPosition(pos1);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(1.5);
+        //armMotor.setPower(1.5);
 
     }
 
@@ -170,6 +174,7 @@ public class Mechanisms {
     //extends viperslide using sticks
     public void extendViperSlide(String direction, double input) {
         int pos1 = viperSlide.getCurrentPosition();
+
         if(direction.equals("up") && pos1 < maxPosition){
             viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             viperSlide.setPower(input/1.5);
@@ -181,11 +186,8 @@ public class Mechanisms {
 
         viperSlide.setTargetPosition(pos1);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperSlide.setPower(1.7);
+        //viperSlide.setPower(1.7);
     }
-
-
-
 
     /*
     public void extendMessumiSlides(String direction){
@@ -204,58 +206,75 @@ public class Mechanisms {
 
      */
 
-    /*
-    distance per tick = (lead screw pith)/(encoder ticks per revolution)
-     */
+    public void pivotLimit1(){
 
-
-    public void pivotLimit(){
-
-        int pos1 = armMotor.getCurrentPosition();
         int ticksPerRev = 1538;
+        int armPosition = armMotor.getCurrentPosition();
 
-        double degrees = (armMotor.getCurrentPosition()/ticksPerRev) * 360;
+        double degrees = ((double) armMotor.getCurrentPosition() /ticksPerRev) * 360;
+
+        if(degrees > 90 && degrees < 180){
+            //degrees-=180;
+            Math.abs(degrees-=180);
+
+            opMode.telemetry.addData("Degree", Math.abs(degrees-=180));
+
+            //double angleRadians = Math.toRadians(degrees);
+        }
+
+        if(degrees > 180 && degrees < 270){
+            degrees-=270;
+            Math.abs(degrees-=270);
+
+            opMode.telemetry.addData("Degree", Math.abs(degrees-270));
+        }
+
         double angleRadians = Math.toRadians(degrees);
+        double base = inchesToTicks(23);
+        double tangent = base * Math.tan(angleRadians); // height
+        double hypotenuse = Math.sqrt((base * base) + (tangent * tangent));
+        double distance = ticksToInches(armPosition);
 
-        double tanget = 26 * Math.tan(angleRadians); // height
-        double hypotenuse = Math.sqrt((26*26) + (tanget * tanget));
 
-        if(viperSlide.getCurrentPosition() == 90) {
-            double newDegree = 180-getAngle();
+        if(checkHorizontal()) {
+            allowExtension = true;
+            if(viperSlide.getCurrentPosition() < base){
+                allowExtension = true;
+            }
+            else {
+                allowExtension = false;
+            }
         }
-        if(viperSlide.getCurrentPosition() == 270){
-            double newDegree = 270-getAngle();
-            double angleToRadians = Math.toRadians(newDegree);
-
+        if(checkVerticall()){
+            allowExtension = true;
+            allowPivot = true;
         }
-        //102mmrevolution
 
-
-        if(!checkHorizontal() || !checkVerticall()) {
-
+        if(distance == hypotenuse){
+            allowPivot = true;
+            allowExtension = true;
         }
-    }
+        if(distance < hypotenuse){
+            allowPivot = true;
+            allowExtension = true;
+        }
+        if(distance > hypotenuse){
+            allowPivot = false;
+            allowExtension = true;
+        }
 
-    public double getAngle() {
-        int tickersPerRev = 312;
-        double degrees = (armMotor.getCurrentPosition() / tickersPerRev) * 360;
-        opMode.telemetry.addData("Angle", degrees);
-
-        return degrees;
     }
 
     public boolean checkHorizontal() {
         int pos = armMotor.getCurrentPosition();
 
-        if(pos == 0) {//change the values
+        if(pos > 0 && pos < 9) {//change the values
             limitPlaced = true;
         }
-        if(pos < 0){
+        if(pos > 0){
             limitPlaced = false;
         }
-        if(pos > 0) {
-            //
-        }
+
 
         return limitPlaced;
     }
@@ -263,7 +282,7 @@ public class Mechanisms {
     public boolean checkVerticall() {
         int pos1 = armMotor.getCurrentPosition();
 
-        if(pos1 == 90){
+        if(pos1 < 90){
             limitPlaced = false;
         }
         if(pos1 < 90 || pos1 > 90){
