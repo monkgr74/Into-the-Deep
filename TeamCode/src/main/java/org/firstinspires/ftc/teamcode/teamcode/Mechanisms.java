@@ -12,7 +12,6 @@ public class Mechanisms {
     //public DcMotor MessumiSlideLeft;
     public DcMotor MessumiSlideRight;
     public DcMotor armMotor;
-    //public CRServo intakeServo;
     public Servo claw;
     int clawOpen = 10; //change value
     int clawClose = 0; //Change Value
@@ -23,11 +22,12 @@ public class Mechanisms {
     private static final double servo_min_pos = 0;
     private static final double servo_max_pos = 1;
     public double currentPivotServoPosition = 0.5;
-    //public double clawOpen = 0.83;
-    //public double clawClose = 0.5;
 
-    final double TICKS_PER_REV = 100;
+    private static final double TICKS_PER_REV = 1538.0; // Encoder ticks per revolution
+    private static final double DISTANCE_PER_REV_MM = 120.0; // Distance moved per revolution in mm
+    private static final double MM_TO_INCHES = 25.4; // Conversion factor for mm to inches
 
+    private static final double DISTANCE_PER_TICK_INCHES = (DISTANCE_PER_REV_MM / TICKS_PER_REV) / MM_TO_INCHES;
 
     boolean limitPlaced = false;
 
@@ -41,6 +41,26 @@ public class Mechanisms {
     LinearOpMode opMode;
     public Mechanisms (LinearOpMode op){
         opMode = op;
+    }
+
+    /**
+     * Converts inches to encoder ticks.
+     *
+     * @param inches The distance in inches to convert.
+     * @return The equivalent number of encoder ticks as an integer.
+     */
+    public static int inchesToTicks(double inches) {
+        return (int) Math.round(inches / DISTANCE_PER_TICK_INCHES);
+    }
+
+    /**
+     * Converts encoder ticks to inches.
+     *
+     * @param ticks The number of encoder ticks to convert.
+     * @return The equivalent distance in inches as a double.
+     */
+    public static double ticksToInches(int ticks) {
+        return ticks * DISTANCE_PER_TICK_INCHES;
     }
 
     public void initViperSlide(HardwareMap hardwareMap){
@@ -88,9 +108,6 @@ public class Mechanisms {
 
         pivot = hardwareMap.get(Servo.class, "pivotClaw");
         pivot.setPosition(0);
-        //intakeServo = hardwareMap.get(CRServo.class, "inTakeServo");
-        //intakeServo.setDirection(CRServo.Direction.FORWARD);
-        //clawPivot.setPosition(Enter value after claw is built);
     }
 
     public void setClawOpen() {
