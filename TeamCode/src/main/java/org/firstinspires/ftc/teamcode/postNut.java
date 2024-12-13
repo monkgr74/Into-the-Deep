@@ -77,19 +77,17 @@ public class postNut extends LinearOpMode {
             }
             */
 
-            double intakeServoIn = gamepad2.right_trigger;
-            double intakeServoOut = gamepad2.left_trigger;
-
             //viperslide speed adjust
             double viperSlide = gamepad2.right_stick_y;
-
             if(viperSlide > 0) {
-                mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-                mech.viperSlide.setPower(viperSlide/ 1.5);
+                //mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+                //mech.viperSlide.setPower(viperSlide/ 1.5);
+                mech.extendViperSlide("up", viperSlide);
             }
             else if(viperSlide<0) {
-                mech.viperSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-                mech.viperSlide.setPower(viperSlide/ 1.5);
+                //mech.viperSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+                //mech.viperSlide.setPower(viperSlide/ 1.5);
+                mech.extendViperSlide("down", viperSlide);
             }
             else {
                 mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -114,20 +112,44 @@ public class postNut extends LinearOpMode {
 
             }
             telemetry.update();
-            //mech.intakeServo.setPower(intakeServoIn);
 
+            if(gamepad2.a) {
+                mech.setClawOpen();
+            }
+            if(gamepad2.b) {
+                mech.setClawClose();
+            }
+            double intakeServoIn = gamepad2.right_trigger;
+            double intakeServoOut = gamepad2.left_trigger;
+            telemetry.addData("PivotPosition",mech.pivot.getPosition());
             if(intakeServoIn > 0.1){
-                mech.intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
-                mech.intakeServo.setPower(intakeServoIn + 0.5);
+                mech.setPivot("forward",intakeServoIn);
+            }
+            if(intakeServoOut > 0.1) {
+                mech.setPivot("forward", intakeServoOut);
+            }
+
+
+            //intakeServos
+            /*
+            if(intakeServoIn > 0.1){
+                //mech.intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
+                //mech.intakeServo.setPower(intakeServoIn + 0.5);
+
+                mech.adjustServo("forward", intakeServoIn);
             }
             else if(intakeServoOut > 0.1) {
-                mech.intakeServo.setDirection(CRServo.Direction.REVERSE);
-                mech.intakeServo.setPower(intakeServoOut + 0.5);
+                //mech.intakeServo.setDirection(CRServo.Direction.REVERSE);
+                //mech.intakeServo.setPower(intakeServoOut + 0.5);
+
+                mech.adjustServo("reverse", intakeServoOut);
             }
             else {
                 mech.intakeServo.setPower(0);
                 mech.intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
             }
+
+             */
 
             /*
             if(gamepad2.a) {
