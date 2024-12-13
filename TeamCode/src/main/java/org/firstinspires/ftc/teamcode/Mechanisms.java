@@ -74,6 +74,7 @@ public class Mechanisms {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
         armMotor.setPower(0);
+
     }
 
     public void initClaw(HardwareMap hardwareMap) {
