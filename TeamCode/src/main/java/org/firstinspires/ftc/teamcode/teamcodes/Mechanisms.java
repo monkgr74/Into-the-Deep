@@ -44,7 +44,7 @@ public class Mechanisms {
     boolean allowPivot = false;
 
     int MaximumArmLimit = 100;
-    int maxPosition = 4291;
+    int maxPosition = 2609;
     int maximumLimit = 43991; //change value
     //int MessumiMaxPosition = 0; // Change it
     // int maxPosition = 4395;
@@ -108,7 +108,7 @@ public class Mechanisms {
         viperPivot.setDirection(DcMotor.Direction.FORWARD);
         viperPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        viperPivot.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        viperPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         viperPivot.setPower(0);
 
     }
@@ -140,7 +140,7 @@ public class Mechanisms {
 
         }
         else if(direction.equals("down")) {
-            pivot.setDirection(Servo.Direction.REVERSE);
+            pivot.setDirection(Servo.Direction.FORWARD);
             pos1 -= 0.15;
             pivot.setPosition(pos1);
         }
@@ -230,10 +230,10 @@ public class Mechanisms {
 
     public void pivotLimit1(){
 
-        int ticksPerRev = 1538;
+        //int ticksPerRev = 1538;
         int armPosition = viperPivot.getCurrentPosition();
 
-        double degrees = ((double) viperPivot.getCurrentPosition() /ticksPerRev) * 360;
+        double degrees = ((double) viperPivot.getCurrentPosition() /TICKS_PER_REV) * 360;
 
         if(degrees > 90 && degrees < 180){
             //degrees-=180;
@@ -252,7 +252,7 @@ public class Mechanisms {
         }
 
         double angleRadians = Math.toRadians(degrees);
-        double base = inchesToTicks(23);
+        double base = inchesToTicks(25);
         double tangent = base * Math.tan(angleRadians); // height
         double hypotenuse = Math.sqrt((base * base) + (tangent * tangent));
         double distance = ticksToInches(armPosition);
