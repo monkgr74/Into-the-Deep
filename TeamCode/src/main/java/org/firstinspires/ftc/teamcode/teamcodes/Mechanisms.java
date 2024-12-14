@@ -189,11 +189,11 @@ public class Mechanisms {
     //extends viperslide using sticks
     public void extendViperSlide(String direction, double input) {
         int pos1 = viperSlide.getCurrentPosition();
-        if(direction.equals("up")){
+        if(direction.equals("up") && pos1 < maxPosition){
             viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             viperSlide.setPower(input/1.5);
         }
-        else if(direction.equals("down") && pos1 >0) {
+        else if(direction.equals("down") && pos1 > 0) {
             viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             viperSlide.setPower(input/1.5);
         }

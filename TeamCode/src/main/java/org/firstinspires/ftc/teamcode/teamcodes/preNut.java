@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "preNut_BasketCloser")
-public class preNut_AutoCloserToBasket extends LinearOpMode {
+public class preNut extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
         DriveTrain drivetrain = new DriveTrain(this);
         drivetrain.initDriveTrain(hardwareMap);
-        Mechanisms mech = new Mechanisms(this);
-        mech.initViperSlide(hardwareMap);
+        //Mechanisms mech = new Mechanisms(this);
+        //mech.initViperSlide(hardwareMap);
 
         waitForStart();
 
@@ -21,6 +21,7 @@ public class preNut_AutoCloserToBasket extends LinearOpMode {
         }
 
         runtime.startTime();
+        /*
         while(runtime.milliseconds()<=30000){
             drivetrain.rotateToAngle(270,0.3);
             drivetrain.moveForward(0.4,1000);
@@ -30,5 +31,8 @@ public class preNut_AutoCloserToBasket extends LinearOpMode {
             drivetrain.moveForward(0.4,1000);
         }
 
+         */
+
+        drivetrain.strafeLeft(0.5,1500);
     }
 }
