@@ -198,9 +198,9 @@ public class Mechanisms {
             viperSlide.setPower(input/1.5);
         }
 
-        viperSlide.setTargetPosition(pos1);
-        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //frontViperExtend.setPower(1.7);
+        //viperSlide.setTargetPosition(pos1);
+        //viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //viperSlide.setPower(1.7);
     }
 
 
