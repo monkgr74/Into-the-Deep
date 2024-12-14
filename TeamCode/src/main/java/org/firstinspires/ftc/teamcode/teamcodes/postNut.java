@@ -74,6 +74,7 @@ public class postNut extends LinearOpMode {
             */
 
             //viperslide speed adjust
+            telemetry.addData("ViperSlidePos", mech.viperSlide.getCurrentPosition());
             double viperSlide = -gamepad2.right_stick_y;
             if(viperSlide > 0) {
                 //mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
