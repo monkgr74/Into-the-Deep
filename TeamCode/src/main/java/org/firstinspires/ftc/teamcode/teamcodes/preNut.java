@@ -34,5 +34,15 @@ public class preNut extends LinearOpMode {
          */
 
         drivetrain.strafeLeft(0.5,2260);
+        drivetrain.moveForward(0.5,800);
+        drivetrain.strafeRight(0.5,2260);
+        drivetrain.strafeLeft(0.5,2260);
+        drivetrain.moveForward(0.5,2260);
+        drivetrain.strafeRight(0.5,2260);
+        drivetrain.strafeLeft(0.5,2260);
+        drivetrain.moveForward(0.5,800);
+        drivetrain.strafeRight(0.5,2260);
+        drivetrain.strafeLeft(0.5,2260);
+
     }
 }
