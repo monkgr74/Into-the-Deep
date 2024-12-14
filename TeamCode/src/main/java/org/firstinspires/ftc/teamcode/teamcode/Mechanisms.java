@@ -11,7 +11,8 @@ public class Mechanisms {
     //public DcMotor linearSlide;
     //public DcMotor MessumiSlideLeft;
     public DcMotor MessumiSlideRight;
-    public DcMotor armMotor;
+    public DcMotor viperPivot;
+    //public DcMotor armMotor;
     public Servo claw;
     int clawOpen = 10; //change value
     int clawClose = 0; //Change Value
@@ -31,7 +32,18 @@ public class Mechanisms {
 
     boolean limitPlaced = false;
 
+    private static final int viperPivotScoringPosition = 900;
+    private static final int viperExtendScoringPosition = 2000;
+    private static final int viperPivotBlockPickupPosition = 900;
+    private static final int viperExtendBlockPickupPosition = 2000;
 
+    private boolean allowFloat = false; // Flag to track when to enable float
+    private long delayStartTime = 0;
+
+    boolean allowExtension = false;
+    boolean allowPivot = false;
+
+    int MaximumArmLimit = 100;
     int maxPosition = 4291;
     int maximumLimit = 43991; //change value
     //int MessumiMaxPosition = 0; // Change it
@@ -92,12 +104,12 @@ public class Mechanisms {
     }
 */
     public void initArmMotor(HardwareMap hardwareMap) {
-        armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
-        armMotor.setPower(0);
+        viperPivot = hardwareMap.get(DcMotor.class, "ArmMotor");
+        viperPivot.setDirection(DcMotor.Direction.FORWARD);
+        viperPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        viperPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        viperPivot.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        viperPivot.setPower(0);
 
     }
 
@@ -132,23 +144,26 @@ public class Mechanisms {
 
 
     public void moveArmMotorAuto(int desiredPosition) {
-        armMotor.getCurrentPosition();
-        armMotor.setTargetPosition(desiredPosition);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperPivot.getCurrentPosition();
+        viperPivot.setTargetPosition(desiredPosition);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void moveArmMotor(String direction) {
-        int pos1 = armMotor.getCurrentPosition();
+    public void moveArmMotor(String direction, double input) {
+        int pos1 = viperPivot.getCurrentPosition();
 
-        if(direction.equals("up") && pos1 < maximumLimit) {
-            pos1 += 20;
-        } else if(direction.equals("down") && pos1 > 0) {
-            pos1 -= 20;
+        if(direction.equals("up") && pos1 < MaximumArmLimit && input >0) {
+            viperPivot.setDirection(DcMotorSimple.Direction.FORWARD);
+            viperPivot.setPower(input/0.5);
+
+        } else if(direction.equals("down") && pos1 > 0 && input < 0) {
+            viperPivot.setDirection(DcMotorSimple.Direction.REVERSE);
+            viperPivot.setPower(input/0.5);
         }
 
-        armMotor.setTargetPosition(pos1);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(1.5);
+        viperPivot.setTargetPosition(pos1);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //armMotor.setPower(1.5);
 
     }
 
@@ -181,7 +196,7 @@ public class Mechanisms {
 
         viperSlide.setTargetPosition(pos1);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperSlide.setPower(1.7);
+        //frontViperExtend.setPower(1.7);
     }
 
 
@@ -209,59 +224,89 @@ public class Mechanisms {
      */
 
 
-    public void pivotLimit(){
+    public void pivotLimit1(){
 
-        int pos1 = armMotor.getCurrentPosition();
         int ticksPerRev = 1538;
+        int armPosition = viperPivot.getCurrentPosition();
 
-        double degrees = (armMotor.getCurrentPosition()/ticksPerRev) * 360;
+        double degrees = ((double) viperPivot.getCurrentPosition() /ticksPerRev) * 360;
+
+        if(degrees > 90 && degrees < 180){
+            //degrees-=180;
+            Math.abs(degrees-=180);
+
+            opMode.telemetry.addData("Degree", Math.abs(degrees-=180));
+
+            //double angleRadians = Math.toRadians(degrees);
+        }
+
+        if(degrees > 180 && degrees < 270){
+            degrees-=270;
+            Math.abs(degrees-=270);
+
+            opMode.telemetry.addData("Degree", Math.abs(degrees-270));
+        }
+
         double angleRadians = Math.toRadians(degrees);
+        double base = inchesToTicks(23);
+        double tangent = base * Math.tan(angleRadians); // height
+        double hypotenuse = Math.sqrt((base * base) + (tangent * tangent));
+        double distance = ticksToInches(armPosition);
 
-        double tanget = 26 * Math.tan(angleRadians); // height
-        double hypotenuse = Math.sqrt((26*26) + (tanget * tanget));
 
-        if(viperSlide.getCurrentPosition() == 90) {
-            double newDegree = 180-getAngle();
+        if(checkHorizontal()) {
+            allowExtension = true;
+            if(viperSlide.getCurrentPosition() < base){
+                allowExtension = true;
+            }
+            else {
+                allowExtension = false;
+            }
         }
-        if(viperSlide.getCurrentPosition() == 270){
-            double newDegree = 270-getAngle();
-            double angleToRadians = Math.toRadians(newDegree);
-
+        if(checkVerticall()){
+            allowExtension = true;
+            allowPivot = true;
         }
-        //102mmrevolution
 
-
-        if(!checkHorizontal() || !checkVerticall()) {
-
+        if(distance == hypotenuse){
+            allowPivot = true;
+            allowExtension = true;
         }
+        if(distance < hypotenuse){
+            allowPivot = true;
+            allowExtension = true;
+        }
+        if(distance > hypotenuse){
+            allowPivot = false;
+            allowExtension = true;
+        }
+
     }
 
     public double getAngle() {
         int tickersPerRev = 312;
-        double degrees = (armMotor.getCurrentPosition() / tickersPerRev) * 360;
+        double degrees = (viperPivot.getCurrentPosition() / tickersPerRev) * 360;
         opMode.telemetry.addData("Angle", degrees);
 
         return degrees;
     }
 
     public boolean checkHorizontal() {
-        int pos = armMotor.getCurrentPosition();
+        int pos = viperPivot.getCurrentPosition();
 
-        if(pos == 0) {//change the values
+        if(pos > 0 && pos < 9) {//change the values
             limitPlaced = true;
         }
-        if(pos < 0){
+        if(pos > 0){
             limitPlaced = false;
         }
-        if(pos > 0) {
-            //
-        }
+
 
         return limitPlaced;
     }
 
     public boolean checkVerticall() {
-        int pos1 = armMotor.getCurrentPosition();
+        int pos1 = viperPivot.getCurrentPosition();
 
         if(pos1 == 90){
             limitPlaced = false;
@@ -412,21 +457,65 @@ public class Mechanisms {
    */
 
     public void BasketScorePosition() {
-        //viperSlide.setTargetPosition(enter position);
-        viperSlide.setPower(0.6);
-        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //adjustingClawUP();
-        armMotor.setTargetPosition(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperPivot.setTargetPosition(viperPivotScoringPosition);
+        viperPivot.setPower(1.7);
+        viperSlide.setTargetPosition(viperExtendScoringPosition);
+        viperSlide.setPower(1.7);
+    }
+
+    public void BlockPickupPosition() {
+        viperPivot.setTargetPosition(viperPivotBlockPickupPosition);
+        viperPivot.setPower(1.7);
+        viperSlide.setTargetPosition(viperExtendBlockPickupPosition);
+        viperSlide.setPower(1.7);
     }
 // anuj was here
     public void zeroPosition() {
         viperSlide.setTargetPosition(0);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setTargetPosition(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperPivot.setTargetPosition(0);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Ensure brakes are initially applied
+        viperPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        allowFloat = false; // Reset flag
 
         //openClaw();
+    }
+
+    public void updateZeroPosition() {
+        if (!viperPivot.isBusy() && !allowFloat) {
+            viperPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            allowFloat = true;
+        }
+
+        if (allowFloat) {
+            // Use non-blocking delay
+            if (nonBlockingSleep(100)) {
+                viperPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                allowFloat = false; // Reset flag
+            }
+        }
+
+        opMode.telemetry.addData("Pivot Position", viperPivot.getCurrentPosition());
+        opMode.telemetry.update();
+    }
+
+    public boolean nonBlockingSleep(long milliseconds) {
+        if (delayStartTime == 0) {
+            // Initialize the delay
+            delayStartTime = System.currentTimeMillis();
+            return false;
+        }
+
+        if (System.currentTimeMillis() - delayStartTime >= milliseconds) {
+            // Delay is complete, reset timer
+            delayStartTime = 0;
+            return true; // Indicates the delay is finished
+        }
+
+        // Delay is still ongoing
+        return false;
     }
 
     public void initMechanisms(HardwareMap hardwareMap) {
