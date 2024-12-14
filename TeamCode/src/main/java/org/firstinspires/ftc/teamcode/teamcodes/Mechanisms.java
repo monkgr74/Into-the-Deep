@@ -256,7 +256,7 @@ public class Mechanisms {
         double hypotenuse = Math.sqrt((base * base) + (tangent * tangent));
         double distance = ticksToInches(armPosition);
 
-
+        /*
         if(checkHorizontal()) {
             allowExtension = true;
             if(viperSlide.getCurrentPosition() < base){
@@ -270,6 +270,8 @@ public class Mechanisms {
             allowExtension = true;
             allowPivot = true;
         }
+
+         */
 
         if(distance == hypotenuse){
             allowPivot = true;
