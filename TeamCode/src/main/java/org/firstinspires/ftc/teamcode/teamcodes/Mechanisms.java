@@ -193,7 +193,7 @@ public class Mechanisms {
             viperSlide.setPower(input/1.5);
         }
         else if(direction.equals("down") && pos1 >0) {
-            viperSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+            viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             viperSlide.setPower(input/1.5);
         }
 
