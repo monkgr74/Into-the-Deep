@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -130,15 +130,18 @@ public class Mechanisms {
         claw.setPosition(clawClose);
     }
     //Assuming its not a 360 degree servo
-    public void setPivot(String direction, double input) {
-        if(direction.equals("forward")) {
+    public void setPivot(String direction) {
+        double pos1 = pivot.getPosition();
+        if(direction.equals("up")) {
             pivot.setDirection(Servo.Direction.FORWARD);
-            pivot.setPosition(input);
+            pos1 += 0.15;
+            pivot.setPosition(pos1);
 
         }
-        else if(direction.equals("negative")) {
+        else if(direction.equals("down")) {
             pivot.setDirection(Servo.Direction.REVERSE);
-            pivot.setPosition(input);
+            pos1 -= 0.15;
+            pivot.setPosition(pos1);
         }
     }
 

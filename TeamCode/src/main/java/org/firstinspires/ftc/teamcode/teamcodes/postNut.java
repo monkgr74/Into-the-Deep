@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +24,7 @@ public class postNut extends LinearOpMode {
         mech.initClaw(hardwareMap);
         //mech.initMessumiSlides(hardwareMap);
         mech.initArmMotor(hardwareMap);
-        mech.BlockPickupPosition();
+        //mech.BlockPickupPosition();
 
 
         if (isStopRequested()) {
@@ -74,13 +74,13 @@ public class postNut extends LinearOpMode {
             */
 
             //viperslide speed adjust
-            double viperSlide = gamepad2.right_stick_y;
+            double viperSlide = -gamepad2.right_stick_y;
             if(viperSlide > 0) {
                 //mech.viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
                 //mech.viperSlide.setPower(viperSlide/ 1.5);
                 mech.extendViperSlide("up", viperSlide);
             }
-            else if(viperSlide<0) {
+            else if(viperSlide < 0) {
                 //mech.viperSlide.setDirection(DcMotorSimple.Direction.REVERSE);
                 //mech.viperSlide.setPower(viperSlide/ 1.5);
                 mech.extendViperSlide("down", viperSlide);
@@ -91,14 +91,14 @@ public class postNut extends LinearOpMode {
 
             }
 
-            double viperPivot = gamepad2.left_stick_y;
+            double viperPivot = -gamepad2.left_stick_y;
             telemetry.addData("armMotorPosition", mech.viperPivot.getCurrentPosition());
             if(viperPivot > 0) {
                 mech.viperPivot.setDirection(DcMotorSimple.Direction.REVERSE);
                 mech.viperPivot.setPower(viperPivot/ 0.5);
             }
             else if(viperPivot<0) {
-                mech.viperPivot.setDirection(DcMotorSimple.Direction.FORWARD);
+                mech.viperPivot.setDirection(DcMotorSimple.Direction.REVERSE);
                 mech.viperPivot.setPower(viperPivot/ 0.5);
             }
             else {
@@ -124,14 +124,15 @@ public class postNut extends LinearOpMode {
                 mech.BlockPickupPosition();
             }
 
-            double intakeServoIn = gamepad2.right_trigger;
-            double intakeServoOut = gamepad2.left_trigger;
+
             telemetry.addData("PivotPosition",mech.pivot.getPosition());
-            if(intakeServoIn > 0.1){
-                mech.setPivot("forward",intakeServoIn);
+            if(gamepad2.dpad_up){
+                mech.setPivot("up");
+
             }
-            if(intakeServoOut > 0.1) {
-                mech.setPivot("forward", intakeServoOut);
+            if(gamepad2.dpad_down) {
+                mech.setPivot("down");
+
             }
 
             //intakeServos
