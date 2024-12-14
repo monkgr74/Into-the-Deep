@@ -14,7 +14,7 @@ public class Mechanisms {
     public DcMotor viperPivot;
     //public DcMotor armMotor;
     public Servo claw;
-    int clawOpen = 10; //change value
+    double clawOpen = 0.38; //change value
     int clawClose = 0; //Change Value
     public Servo pivot;
     private boolean isForwardActive = false;
@@ -120,7 +120,7 @@ public class Mechanisms {
 
         pivot = hardwareMap.get(Servo.class, "pivotClaw");
         //pivot.setDirection();
-        pivot.setPosition(1);
+        pivot.setPosition(0.5);
     }
 
     public void setClawOpen() {
