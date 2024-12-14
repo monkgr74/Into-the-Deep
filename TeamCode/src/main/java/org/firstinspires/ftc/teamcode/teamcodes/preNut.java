@@ -33,6 +33,6 @@ public class preNut extends LinearOpMode {
 
          */
 
-        drivetrain.strafeLeft(0.5,1500);
+        drivetrain.strafeLeft(0.5,2260);
     }
 }
