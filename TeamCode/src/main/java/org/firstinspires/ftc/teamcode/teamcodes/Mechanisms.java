@@ -8,15 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Mechanisms {
     public DcMotor viperSlide;
-    //public DcMotor linearSlide;
-    //public DcMotor MessumiSlideLeft;
-    public DcMotor MessumiSlideRight;
     public DcMotor viperPivot;
-    //public DcMotor armMotor;
+    //public DcMotor BWTSlide1;
+    //public DcMotor BWTSlide2;
     public Servo claw;
+    public Servo pivot;
     double clawOpen = 0.38; //change value
     int clawClose = 0; //Change Value
-    public Servo pivot;
     private boolean isForwardActive = false;
     private boolean isBackwardActive = false;
 
@@ -47,8 +45,6 @@ public class Mechanisms {
     int MaximumArmLimit = 100;
     int maxPosition = 2609;
     int maximumLimit = 43991; //change value
-    //int MessumiMaxPosition = 0; // Change it
-    // int maxPosition = 4395;
     double slideSpeed = 1.0;
 
     LinearOpMode opMode;
@@ -121,7 +117,7 @@ public class Mechanisms {
 
         pivot = hardwareMap.get(Servo.class, "pivotClaw");
         //pivot.setDirection();
-        pivot.setPosition(0.5);
+        pivot.setPosition(0);
     }
 
     public void setClawOpen() {
@@ -142,18 +138,18 @@ public class Mechanisms {
     public void setClawClose() {
         claw.setPosition(clawClose);
     }
-    //Assuming its not a 360 degree servo
+
     public void setPivot(String direction) {
         double pos1 = pivot.getPosition();
         if(direction.equals("up")) {
-            pivot.setDirection(Servo.Direction.FORWARD);
-            pos1 += 0.15;
+            pivot.setDirection(Servo.Direction.REVERSE);
+            pos1 += 0.10;
             pivot.setPosition(pos1);
 
         }
         else if(direction.equals("down")) {
-            pivot.setDirection(Servo.Direction.FORWARD);
-            pos1 -= 0.15;
+            pivot.setDirection(Servo.Direction.REVERSE);
+            pos1 -= 0.10;
             pivot.setPosition(pos1);
         }
     }
@@ -183,19 +179,33 @@ public class Mechanisms {
 
     }
 
+    public void armMotorPivot(String direction){
+        int pos1 = viperPivot.getCurrentPosition();
+
+        if(direction.equals("up")){
+            pos1+=500;
+        }
+        if(direction.equals("down")){
+            pos1-=500;
+        }
+        viperPivot.setTargetPosition(pos1);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperPivot.setPower(1.5);
+    }
+
     public void extendViperSlide(String direction) {
         int pos1 = viperSlide.getCurrentPosition();
 
-        if(direction.equals("up") && pos1 < maxPosition){
+        if(direction.equals("forward") && pos1 < maxPosition){
             pos1 += 50;
         }
-        else if(direction.equals("down") && pos1 > 0) {
+        else if(direction.equals("backward") && pos1 > 0) {
             pos1 -= 50;
         }
 
         viperSlide.setTargetPosition(pos1);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperSlide.setPower(1.7);
+        viperSlide.setPower(0.6);
     }
 
     //extends viperslide using sticks
@@ -284,7 +294,7 @@ public class Mechanisms {
             allowPivot = true;
         }
 
-         */
+
 
         if(distance == hypotenuse){
             allowPivot = true;
@@ -298,6 +308,7 @@ public class Mechanisms {
             allowPivot = false;
             allowExtension = true;
         }
+        */
 
     }
 
@@ -324,13 +335,13 @@ public class Mechanisms {
     }
 
     public boolean checkVerticall() {
-        int pos1 = viperPivot.getCurrentPosition();
+        int pos = viperPivot.getCurrentPosition();
 
-        if(pos1 == 90){
-            limitPlaced = false;
-        }
-        if(pos1 < 90 || pos1 > 90){
+        if(pos == 90){
             limitPlaced = true;
+        }
+        if(pos> 0){
+            limitPlaced = false;
         }
         return limitPlaced;
     }
@@ -483,10 +494,10 @@ public class Mechanisms {
     }
 
     public void SpecimenPickupPosition() {
-        viperPivot.setTargetPosition(56);
+        viperPivot.setTargetPosition(2700);
         viperPivot.setPower(1.7);
-        viperSlide.setTargetPosition(56);
-        viperSlide.setPower(1.7);
+        //viperSlide.setTargetPosition(56);
+        //viperSlide.setPower(1.7);
         pivot.setPosition(56);
     }
     public void BlockPickupPosition() {
