@@ -495,9 +495,9 @@ public class Mechanisms {
 
     public void SpecimenPickupPosition() {
         viperPivot.setTargetPosition(0);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         viperPivot.setPower(1.7);
-        //viperSlide.setTargetPosition(56);
-        //viperSlide.setPower(1.7);
+        pivot.setDirection(Servo.Direction.FORWARD);
         pivot.setPosition(0.4);
         setClawOpen();
     }
