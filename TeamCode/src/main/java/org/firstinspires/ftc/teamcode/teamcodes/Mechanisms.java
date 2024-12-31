@@ -498,7 +498,7 @@ public class Mechanisms {
         viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         viperPivot.setPower(1.7);
         pivot.setDirection(Servo.Direction.FORWARD);
-        pivot.setPosition(0.4);
+        pivot.setPosition(0.5);
         setClawOpen();
     }
     public void BlockPickupPosition() {
