@@ -82,11 +82,11 @@ public class postNut extends LinearOpMode {
                 mech.BasketScorePosition();
             }
 
-            if (gamepad2.y) {
+            if (gamepad2.b) {
                 mech.SpecimenPickupPosition();
             }
 
-            if(gamepad2.b){
+            if(gamepad2.y){
                 mech.BlockPickupPosition();
             }
 
