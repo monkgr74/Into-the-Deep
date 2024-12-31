@@ -117,7 +117,7 @@ public class Mechanisms {
 
         pivot = hardwareMap.get(Servo.class, "pivotClaw");
         //pivot.setDirection();
-        pivot.setPosition(0);
+        //pivot.setPosition(0);
     }
 
     public void setClawOpen() {
