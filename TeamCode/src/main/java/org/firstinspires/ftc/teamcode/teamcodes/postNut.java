@@ -78,17 +78,17 @@ public class postNut extends LinearOpMode {
 
 
 
-            if (gamepad2.x) {
-                mech.BasketScorePosition();
-            }
+//            if (gamepad2.x) {
+//                mech.BasketScorePosition();
+//            }
 
             if (gamepad2.b) {
                 mech.SpecimenPickupPosition();
             }
 
-            if(gamepad2.y){
-                mech.BlockPickupPosition();
-            }
+//            if(gamepad2.y){
+//                mech.BlockPickupPosition();
+//            }
 
 
             telemetry.addData("ClawPivotPosition",mech.pivot.getPosition());

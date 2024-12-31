@@ -488,8 +488,8 @@ public class Mechanisms {
     public void BasketScorePosition() {
         viperPivot.setTargetPosition(viperPivotScoringPosition);
         viperPivot.setPower(1.7);
-        viperSlide.setTargetPosition(viperExtendScoringPosition);
-        viperSlide.setPower(1.7);
+        //viperSlide.setTargetPosition(viperExtendScoringPosition);
+        //viperSlide.setPower(1.7);
         pivot.setPosition(0.35);
     }
 
@@ -504,8 +504,8 @@ public class Mechanisms {
     public void BlockPickupPosition() {
         viperPivot.setTargetPosition(56);
         viperPivot.setPower(1.7);
-        viperSlide.setTargetPosition(56);
-        viperSlide.setPower(1.7);
+        //viperSlide.setTargetPosition(56);
+        //viperSlide.setPower(1.7);
         pivot.setPosition(56);
     }
 
