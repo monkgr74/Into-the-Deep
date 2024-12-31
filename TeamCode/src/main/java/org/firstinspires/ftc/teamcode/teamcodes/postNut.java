@@ -78,25 +78,25 @@ public class postNut extends LinearOpMode {
 
 
 
-            if (gamepad2.x) {
-                mech.BasketScorePosition();
-            }
-
-            if (gamepad2.y) {
-                mech.SpecimenPickupPosition();
-            }
-
-            if(gamepad2.b){
-                mech.BlockPickupPosition();
-            }
+//            if (gamepad2.x) {
+//                mech.BasketScorePosition();
+//            }
+//
+//            if (gamepad2.y) {
+//                mech.SpecimenPickupPosition();
+//            }
+//
+//            if(gamepad2.b){
+//                mech.BlockPickupPosition();
+//            }
 
 
             telemetry.addData("ClawPivotPosition",mech.pivot.getPosition());
-            if(gamepad2.dpad_up){
+            if(gamepad2.right_bumper){
                 mech.setPivot("up");
 
             }
-            if(gamepad2.dpad_down) {
+            if(gamepad2.left_bumper) {
                 mech.setPivot("down");
 
             }
