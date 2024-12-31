@@ -32,6 +32,7 @@ public class Mechanisms {
 
     boolean limitPlaced = false;
 
+
     private static final int viperPivotScoringPosition = 900;
     private static final int viperExtendScoringPosition = 2000;
     private static final int viperPivotBlockPickupPosition = 900;
@@ -125,6 +126,17 @@ public class Mechanisms {
 
     public void setClawOpen() {
         claw.setPosition(clawOpen);
+    }
+
+    public void openClaw(double input){
+        if(input >0.1){
+            setClawOpen();
+        }
+    }
+    public void closeClaw(double input){
+        if(input >0.1){
+            setClawClose();
+        }
     }
 
     public void setClawClose() {
@@ -467,15 +479,24 @@ public class Mechanisms {
         viperPivot.setPower(1.7);
         viperSlide.setTargetPosition(viperExtendScoringPosition);
         viperSlide.setPower(1.7);
+        pivot.setPosition(0.35);
     }
 
-    public void BlockPickupPosition() {
-        viperPivot.setTargetPosition(viperPivotBlockPickupPosition);
+    public void SpecimenPickupPosition() {
+        viperPivot.setTargetPosition(56);
         viperPivot.setPower(1.7);
-        viperSlide.setTargetPosition(viperExtendBlockPickupPosition);
+        viperSlide.setTargetPosition(56);
         viperSlide.setPower(1.7);
+        pivot.setPosition(56);
     }
-// anuj was here
+    public void BlockPickupPosition() {
+        viperPivot.setTargetPosition(56);
+        viperPivot.setPower(1.7);
+        viperSlide.setTargetPosition(56);
+        viperSlide.setPower(1.7);
+        pivot.setPosition(56);
+    }
+
     public void zeroPosition() {
         viperSlide.setTargetPosition(0);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);

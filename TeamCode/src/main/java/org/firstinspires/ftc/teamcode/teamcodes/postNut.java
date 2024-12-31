@@ -107,21 +107,19 @@ public class postNut extends LinearOpMode {
                 mech.viperPivot.setPower(0);
 
             }
-            telemetry.update();
 
-            if(gamepad2.a) {
-                mech.setClawOpen();
-            }
-
-            if(gamepad2.b) {
-                mech.setClawClose();
-            }
+            mech.openClaw(gamepad2.left_trigger);
+            mech.closeClaw(gamepad2.right_trigger);
 
             if (gamepad2.x) {
                 mech.BasketScorePosition();
             }
 
             if (gamepad2.y) {
+                mech.SpecimenPickupPosition();
+            }
+
+            if(gamepad2.b){
                 mech.BlockPickupPosition();
             }
 
