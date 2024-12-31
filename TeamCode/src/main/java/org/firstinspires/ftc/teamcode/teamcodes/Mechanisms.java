@@ -494,11 +494,12 @@ public class Mechanisms {
     }
 
     public void SpecimenPickupPosition() {
-        viperPivot.setTargetPosition(2700);
+        viperPivot.setTargetPosition(0);
         viperPivot.setPower(1.7);
         //viperSlide.setTargetPosition(56);
         //viperSlide.setPower(1.7);
-        pivot.setPosition(56);
+        pivot.setPosition(0.4);
+        setClawOpen();
     }
     public void BlockPickupPosition() {
         viperPivot.setTargetPosition(56);
