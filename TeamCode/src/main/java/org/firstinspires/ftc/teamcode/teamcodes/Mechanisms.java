@@ -190,7 +190,7 @@ public class Mechanisms {
         }
         viperPivot.setTargetPosition(pos1);
         viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperPivot.setPower(1.5);
+        viperPivot.setPower(1.7);
     }
 
     public void extendViperSlide(String direction) {
@@ -205,7 +205,7 @@ public class Mechanisms {
 
         viperSlide.setTargetPosition(pos1);
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperSlide.setPower(0.6);
+        viperSlide.setPower(0.7);
     }
 
     //extends viperslide using sticks
@@ -486,11 +486,11 @@ public class Mechanisms {
    */
 
     public void BasketScorePosition() {
-        viperPivot.setTargetPosition(viperPivotScoringPosition);
+        viperPivot.setTargetPosition(4700);
         viperPivot.setPower(1.7);
         //viperSlide.setTargetPosition(viperExtendScoringPosition);
         //viperSlide.setPower(1.7);
-        pivot.setPosition(0.35);
+        pivot.setPosition(0.4);
     }
 
     public void SpecimenPickupPosition() {
@@ -498,15 +498,23 @@ public class Mechanisms {
         viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         viperPivot.setPower(1.7);
         pivot.setDirection(Servo.Direction.FORWARD);
-        pivot.setPosition(0.5);
+        pivot.setPosition(0.6);
         setClawOpen();
     }
+
+    public void SpecimenScoringPosition() {
+        viperPivot.setTargetPosition(7960);
+        viperPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperPivot.setPower(1.7);
+        pivot.setDirection(Servo.Direction.FORWARD);
+        pivot.setPosition(0.9);
+    }
     public void BlockPickupPosition() {
-        viperPivot.setTargetPosition(56);
+        viperPivot.setTargetPosition(12850);
         viperPivot.setPower(1.7);
         //viperSlide.setTargetPosition(56);
         //viperSlide.setPower(1.7);
-        pivot.setPosition(56);
+        pivot.setPosition(0.9);
     }
 
     public void zeroPosition() {

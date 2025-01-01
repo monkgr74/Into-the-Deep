@@ -58,7 +58,18 @@ public class postNut extends LinearOpMode {
             drivetrain.backRight.setPower(backRightPower);
 
 
-            //controls
+            //controls gamepad1
+
+            if(gamepad1.y) {
+                mech.SpecimenScoringPosition();
+            }
+
+
+            if (gamepad1.x) {
+                mech.BasketScorePosition();
+            }
+
+            //controls gamepad2
             mech.openClaw(gamepad2.left_trigger);
             mech.closeClaw(gamepad2.right_trigger);
 
@@ -78,17 +89,13 @@ public class postNut extends LinearOpMode {
 
 
 
-//            if (gamepad2.x) {
-//                mech.BasketScorePosition();
-//            }
-
             if (gamepad2.b) {
                 mech.SpecimenPickupPosition();
             }
 
-//            if(gamepad2.y){
-//                mech.BlockPickupPosition();
-//            }
+            if(gamepad2.y){
+                mech.BlockPickupPosition();
+            }
 
 
             telemetry.addData("ClawPivotPosition",mech.pivot.getPosition());
