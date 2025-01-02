@@ -137,6 +137,7 @@ public class Mechanisms {
         if(teamColor == true){
             boolean isBluish = blue > red && blue > green;
             opMode.telemetry.addData("Blue Detected", isBluish);
+            setClawClose();
         }
 
 
@@ -150,6 +151,7 @@ public class Mechanisms {
         if(teamColor == true){
             boolean isRedish = red > blue && red > green;
             opMode.telemetry.addData("RED DETECTED", isRedish);
+            setClawClose();
         }
 
 

@@ -17,14 +17,7 @@ public class postNut extends LinearOpMode {
         DriveTrain drivetrain = new DriveTrain(this);
         Mechanisms mech = new Mechanisms(this);
 
-
-
         drivetrain.initDriveTrain((hardwareMap));
-        //mech.initViperSlide(hardwareMap);
-        //mech.initClaw(hardwareMap);
-        //mech.initMessumiSlides(hardwareMap);
-        //mech.initArmMotor(hardwareMap);
-        //mech.BlockPickupPosition();
         mech.initMechanisms(hardwareMap);
 
         //Checks what team color we are
@@ -51,7 +44,8 @@ public class postNut extends LinearOpMode {
 
             time = runtime.startTime();
             telemetry.addData("RunTime", time);
-            //telemetry.update();
+
+            //drives the robot
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
@@ -86,7 +80,7 @@ public class postNut extends LinearOpMode {
                 mech.extendViperSlide("forward");
             }
 
-
+            //pivots the arm
             telemetry.addData("viperPivot", mech.viperPivot.getCurrentPosition());
             if(gamepad2.dpad_down){
                 mech.armMotorPivot("down");
@@ -95,16 +89,16 @@ public class postNut extends LinearOpMode {
                 mech.armMotorPivot("up");
             }
 
-
+            //block pickup positions on wall
             if (gamepad2.b) {
                 mech.SpecimenPickupPosition();
             }
-
+            //block pickup position from floor
             if(gamepad2.y){
                 mech.BlockPickupPosition();
             }
 
-
+            //pviots the claw
             telemetry.addData("ClawPivotPosition",mech.pivot.getPosition());
             if(gamepad2.right_bumper){
                 mech.setClawPivot("up");
