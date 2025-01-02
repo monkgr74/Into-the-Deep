@@ -20,11 +20,13 @@ public class postNut extends LinearOpMode {
         waitForStart();
 
         drivetrain.initDriveTrain((hardwareMap));
-        mech.initViperSlide(hardwareMap);
-        mech.initClaw(hardwareMap);
+        //mech.initViperSlide(hardwareMap);
+        //mech.initClaw(hardwareMap);
         //mech.initMessumiSlides(hardwareMap);
-        mech.initArmMotor(hardwareMap);
+        //mech.initArmMotor(hardwareMap);
         //mech.BlockPickupPosition();
+        mech.initMechanisms(hardwareMap);
+
 
 
         if (isStopRequested()) {
@@ -59,6 +61,8 @@ public class postNut extends LinearOpMode {
 
 
             //controls gamepad1
+
+            mech.checkIfBlue();
 
             if(gamepad1.y) {
                 mech.SpecimenScoringPosition();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teamcodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,6 +14,7 @@ public class Mechanisms {
     //public DcMotor BWTSlide2;
     public Servo claw;
     public Servo pivot;
+    public ColorSensor colorSensor;
     double clawOpen = 0.38; //change value
     int clawClose = 0; //Change Value
     private boolean isForwardActive = false;
@@ -47,6 +49,7 @@ public class Mechanisms {
     int maximumLimit = 43991; //change value
     double slideSpeed = 1.0;
 
+    boolean isBlue = false;
     LinearOpMode opMode;
     public Mechanisms (LinearOpMode op){
         opMode = op;
@@ -118,6 +121,24 @@ public class Mechanisms {
         pivot = hardwareMap.get(Servo.class, "pivotClaw");
         //pivot.setDirection();
         //pivot.setPosition(0);
+    }
+
+    public void initColorSensor(HardwareMap hardwareMap){
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+    }
+
+    public void checkIfBlue(){
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
+
+        boolean isBluish = blue > red && blue > green;
+
+        opMode.telemetry.addData("Blue Detected", isBluish);
+        opMode.telemetry.addData("Red",red);
+        opMode.telemetry.addData("Green", green);
+        opMode.telemetry.addData("blue", blue);
+        opMode.telemetry.update();
     }
 
     public void setClawOpen() {
@@ -569,6 +590,7 @@ public class Mechanisms {
         initViperSlide(hardwareMap);
         initClaw(hardwareMap);
         initArmMotor(hardwareMap);
+        initColorSensor(hardwareMap);
     }
 
 
@@ -583,7 +605,6 @@ dont remove. i shall remove it - anuj
 
 
     }
-yo whats good everybody its your boy mindofrez and you already knooooow and today...
 
 
      */
