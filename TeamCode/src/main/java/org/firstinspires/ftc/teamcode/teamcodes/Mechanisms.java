@@ -138,7 +138,7 @@ public class Mechanisms {
         opMode.telemetry.addData("Red",red);
         opMode.telemetry.addData("Green", green);
         opMode.telemetry.addData("blue", blue);
-        opMode.telemetry.update();
+        //opMode.telemetry.update();
     }
 
     public void setClawOpen() {

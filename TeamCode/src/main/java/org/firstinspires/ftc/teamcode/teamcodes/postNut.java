@@ -39,7 +39,7 @@ public class postNut extends LinearOpMode {
 
             time = runtime.startTime();
             telemetry.addData("RunTime", time);
-            telemetry.update();
+            //telemetry.update();
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
