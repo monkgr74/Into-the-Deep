@@ -17,7 +17,7 @@ public class postNut extends LinearOpMode {
         DriveTrain drivetrain = new DriveTrain(this);
         Mechanisms mech = new Mechanisms(this);
 
-        waitForStart();
+
 
         drivetrain.initDriveTrain((hardwareMap));
         //mech.initViperSlide(hardwareMap);
@@ -27,7 +27,19 @@ public class postNut extends LinearOpMode {
         //mech.BlockPickupPosition();
         mech.initMechanisms(hardwareMap);
 
+        //Checks what team color we are
+        telemetry.addLine("Choose Team");
+        telemetry.addData("Red Team:", "Player 1, press UP");
+        telemetry.addData("Blue Team: ", "Player 1, press DOWN");
+        if(gamepad1.dpad_up){
+            mech.checkIfRed(true);
+            telemetry.addData("Team Selected:", "RED");
+        } else if (gamepad1.dpad_down){
+            mech.checkIfBlue(true);
+            telemetry.addData("Team Selected:", "BLUE");
+        }
 
+        waitForStart();
 
         if (isStopRequested()) {
             return;
@@ -54,9 +66,6 @@ public class postNut extends LinearOpMode {
             drivetrain.backLeft.setPower(backLeftPower);
             drivetrain.backRight.setPower(backRightPower);
 
-            //Checks if the block is blue
-            mech.checkIfBlue();
-
             //Position to score specimen
             if(gamepad1.y) {
                 mech.SpecimenScoringPosition();
@@ -77,6 +86,7 @@ public class postNut extends LinearOpMode {
                 mech.extendViperSlide("forward");
             }
 
+
             telemetry.addData("viperPivot", mech.viperPivot.getCurrentPosition());
             if(gamepad2.dpad_down){
                 mech.armMotorPivot("down");
@@ -84,7 +94,6 @@ public class postNut extends LinearOpMode {
             if(gamepad2.dpad_up){
                 mech.armMotorPivot("up");
             }
-
 
 
             if (gamepad2.b) {
@@ -98,16 +107,16 @@ public class postNut extends LinearOpMode {
 
             telemetry.addData("ClawPivotPosition",mech.pivot.getPosition());
             if(gamepad2.right_bumper){
-                mech.setPivot("up");
+                mech.setClawPivot("up");
 
             }
             if(gamepad2.left_bumper) {
-                mech.setPivot("down");
+                mech.setClawPivot("down");
 
             }
 
-            telemetry.update();
 
+            telemetry.update();
             sleep(100);
         }
     }

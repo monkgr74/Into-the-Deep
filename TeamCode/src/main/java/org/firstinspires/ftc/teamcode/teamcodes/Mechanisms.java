@@ -127,20 +127,32 @@ public class Mechanisms {
         colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
     }
 
-    public void checkIfBlue(){
+    public void checkIfBlue(boolean teamColor){
         int red = colorSensor.red();
         int green = colorSensor.green();
         int blue = colorSensor.blue();
 
-        boolean isBluish = blue > red && blue > green;
-        boolean isRedish = red > blue && red > green;
 
-        opMode.telemetry.addData("Blue Detected", isBluish);
-        opMode.telemetry.addData("RED DETECTED", isRedish);
-//        opMode.telemetry.addData("Red",red);
-//        opMode.telemetry.addData("Green", green);
-//        opMode.telemetry.addData("blue", blue);
-        //opMode.telemetry.update();
+
+        if(teamColor == true){
+            boolean isBluish = blue > red && blue > green;
+            opMode.telemetry.addData("Blue Detected", isBluish);
+        }
+
+
+    }
+
+    public void checkIfRed(boolean teamColor){
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
+
+        if(teamColor == true){
+            boolean isRedish = red > blue && red > green;
+            opMode.telemetry.addData("RED DETECTED", isRedish);
+        }
+
+
     }
 
     public void setClawOpen() {
@@ -162,7 +174,7 @@ public class Mechanisms {
         claw.setPosition(clawClose);
     }
 
-    public void setPivot(String direction) {
+    public void setClawPivot(String direction) {
         double pos1 = pivot.getPosition();
         if(direction.equals("up")) {
             pivot.setDirection(Servo.Direction.REVERSE);
