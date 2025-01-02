@@ -33,9 +33,8 @@ public class postNut extends LinearOpMode {
             return;
         }
 
-        //This is loop that checks the gamepad fr inputs every iteration
+        //This is loop that checks the gamepad for inputs every iteration
         while (opModeIsActive()) {
-            //mech.armPreset();
             mech.updateZeroPosition();
 
             time = runtime.startTime();
@@ -44,10 +43,6 @@ public class postNut extends LinearOpMode {
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
-            //double speedScale = 0.8;
-           // double linearSlideUp = gamepad1.right_trigger;
-           // double linearSLideDown = gamepad1.left_trigger;
-
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1.0);
             double frontLeftPower = (y + x + rx)/2.0;
             double backLeftPower = (y - x + rx)/2.0;
@@ -59,24 +54,23 @@ public class postNut extends LinearOpMode {
             drivetrain.backLeft.setPower(backLeftPower);
             drivetrain.backRight.setPower(backRightPower);
 
-
-            //controls gamepad1
-
+            //Checks if the block is blue
             mech.checkIfBlue();
 
+            //Position to score specimen
             if(gamepad1.y) {
                 mech.SpecimenScoringPosition();
             }
-
-
+            //Position to score specimen in the basket
             if (gamepad1.x) {
                 mech.BasketScorePosition();
             }
 
-            //controls gamepad2
+            //controls gamepad2 claw open and close
             mech.openClaw(gamepad2.left_trigger);
             mech.closeClaw(gamepad2.right_trigger);
 
+            //extends the viper slide
             if(gamepad2.dpad_left){
                 mech.extendViperSlide("backward");
             } else if(gamepad2.dpad_right){
