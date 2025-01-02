@@ -133,11 +133,13 @@ public class Mechanisms {
         int blue = colorSensor.blue();
 
         boolean isBluish = blue > red && blue > green;
+        boolean isRedish = red > blue && red > green;
 
         opMode.telemetry.addData("Blue Detected", isBluish);
-        opMode.telemetry.addData("Red",red);
-        opMode.telemetry.addData("Green", green);
-        opMode.telemetry.addData("blue", blue);
+        opMode.telemetry.addData("RED DETECTED", isRedish);
+//        opMode.telemetry.addData("Red",red);
+//        opMode.telemetry.addData("Green", green);
+//        opMode.telemetry.addData("blue", blue);
         //opMode.telemetry.update();
     }
 
@@ -218,10 +220,10 @@ public class Mechanisms {
         int pos1 = viperSlide.getCurrentPosition();
 
         if(direction.equals("forward") && pos1 < maxPosition){
-            pos1 += 50;
+            pos1 += 150;
         }
         else if(direction.equals("backward") && pos1 > 0) {
-            pos1 -= 50;
+            pos1 -= 150;
         }
 
         viperSlide.setTargetPosition(pos1);
