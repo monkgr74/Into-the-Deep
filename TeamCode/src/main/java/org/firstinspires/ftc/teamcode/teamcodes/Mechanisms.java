@@ -76,7 +76,8 @@ public class Mechanisms {
     }
 
     public void initViperSlide(HardwareMap hardwareMap){
-        viperSlide = hardwareMap.get(DcMotor.class, "viperSlide");
+        viperSlide+
+                = hardwareMap.get(DcMotor.class, "viperSlide");
         viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         viperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -244,6 +245,7 @@ public class Mechanisms {
         viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         viperSlide.setPower(0.7);
     }
+
 
     //extends viperslide using sticks
     public void extendViperSlide(String direction, double input) {
@@ -547,7 +549,7 @@ public class Mechanisms {
         pivot.setPosition(0.9);
     }
     public void BlockPickupPosition() {
-        viperPivot.setTargetPosition(12850);
+        viperPivot.setTargetPosition(12950);
         viperPivot.setPower(1.7);
         //viperSlide.setTargetPosition(56);
         //viperSlide.setPower(1.7);
