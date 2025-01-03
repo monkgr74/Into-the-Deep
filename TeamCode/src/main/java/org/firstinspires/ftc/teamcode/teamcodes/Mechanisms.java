@@ -76,8 +76,7 @@ public class Mechanisms {
     }
 
     public void initViperSlide(HardwareMap hardwareMap){
-        viperSlide+
-                = hardwareMap.get(DcMotor.class, "viperSlide");
+        viperSlide = hardwareMap.get(DcMotor.class, "viperSlide");
         viperSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         viperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -138,7 +137,6 @@ public class Mechanisms {
         if(teamColor == true){
             boolean isBluish = blue > red && blue > green;
             opMode.telemetry.addData("Blue Detected", isBluish);
-            setClawClose();
         }
 
 
@@ -152,7 +150,6 @@ public class Mechanisms {
         if(teamColor == true){
             boolean isRedish = red > blue && red > green;
             opMode.telemetry.addData("RED DETECTED", isRedish);
-            setClawClose();
         }
 
 
